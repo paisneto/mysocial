@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.nunocoelho.mysocial">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA2" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <!-- <uses-permission android:name="android.permission.ACTION_IMAGE_CAPTURE"/>
+      <uses-feature android:name="android.hardware.camera2" />-->
+
+    <!-- To auto-complete the email text field in the login form with the user's emails -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_PROFILE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+
+    <application
+        android:name=".login.UserApplication"
+        android:allowBackup="false"
+        android:icon="@drawable/logo"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".LoginActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".login.RecoverPassActivity" />
+        <activity android:name=".login.RegisterUserActivity" />
+        <activity android:name=".trip.ListTripActivity" />
+        <activity android:name=".trip.DetailTripActivity" />
+        <activity android:name=".login.EditUserActivity" />
+        <activity android:name=".trip.EditTripActivity" />
+        <activity android:name=".trip.AddTripActivity" />
+        <!--
+            <activity
+            android:name=".AddMommentActivity"
+            android:label="@string/title_activity_add_momment" />
+        -->
+        <activity android:name=".moment.AddMommentActivity" />
+        <activity android:name=".moment.EditMommentActivity" />
+        <activity android:name=".trip.SearchTripActivity" />
+        <activity android:name=".camera.CameraActivity"></activity>
+    </application>
+
+</manifest>

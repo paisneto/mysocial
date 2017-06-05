@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/routines_rv_item"
+    android:layout_width="match_parent"
+    android:layout_height="72dp"
+    android:orientation="horizontal">
+
+    <FrameLayout
+        android:id="@+id/icon_frame"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="top"
+        android:layout_margin="16dp"
+        android:background="@drawable/circle_drawable">
+
+        <ImageView
+            android:id="@+id/img_avatar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:scaleType="fitCenter"/>
+
+        <!--<de.hdodenhof.circleimageview.CircleImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/img_avatar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/avatar_anon"
+            app:civ_border_width="0dp"/>-->
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:paddingBottom="2dp"
+            android:paddingRight="16dp"
+            android:textColor="@color/colorPrimary"
+            android:textSize="16sp"/>
+
+        <TextView
+            android:id="@+id/tv_country"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:paddingRight="16dp"
+            android:paddingTop="2dp"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="14sp"/>
+    </LinearLayout>
+</LinearLayout>
