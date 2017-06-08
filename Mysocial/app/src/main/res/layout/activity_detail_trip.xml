@@ -266,13 +266,15 @@
             android:scaleType="fitXY"
             android:src="@mipmap/ic_launcher_round"
             tools:layout_editor_absoluteX="24dp"
-            tools:layout_editor_absoluteY="89dp" />
+            tools:layout_editor_absoluteY="89dp"
+            tools:ignore="ContentDescription,InefficientWeight" />
 
         <ImageButton
             android:id="@+id/iv_fototrip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@android:drawable/ic_menu_camera" />
+            android:src="@android:drawable/ic_menu_camera"
+            tools:ignore="ContentDescription" />
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

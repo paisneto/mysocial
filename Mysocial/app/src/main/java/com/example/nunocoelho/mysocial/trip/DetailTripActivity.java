@@ -43,8 +43,11 @@ import org.w3c.dom.Text;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -67,8 +70,9 @@ public class DetailTripActivity extends AppCompatActivity {
     private ListView lv_momments;
     private TextView tv_titledetail, tv_countrydetail, tv_citydetail, tv_datedetail, tv_descriptiondetail;
     private ArrayList<EntryDetailsMoment> entryDetailsMomentList;
-    private static final String IMAGE_DIRECTORY = "/demonuts";
+    private static final String IMAGE_DIRECTORY = "/MEIMySocialUploads";
     private int GALLERY = 1, CAMERA = 2;
+    private Bitmap imageBitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -214,8 +218,10 @@ public class DetailTripActivity extends AppCompatActivity {
                 try {
                     Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), contentURI);
                     String path = saveImage(bitmap);
-                    Toast.makeText(DetailTripActivity.this, "Image Saved!", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(DetailTripActivity.this, "Image Saved!", Toast.LENGTH_SHORT).show();
                     iv_image_selected.setImageBitmap(bitmap);
+                    InputStream inputStream = this.getContentResolver().openInputStream(data.getData());
+                    imageBitmap = BitmapFactory.decodeStream(inputStream);
                     loadFiles();
 
                 } catch (IOException e) {
@@ -228,42 +234,12 @@ public class DetailTripActivity extends AppCompatActivity {
             Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
             iv_image_selected.setImageBitmap(thumbnail);
             String res = saveImage(thumbnail);
+            Bundle extras = data.getExtras();
+            imageBitmap = (Bitmap) extras.get("data");
             if(res != "") loadFiles();
             else Toast.makeText(DetailTripActivity.this, "Image NOT Saved!", Toast.LENGTH_SHORT).show();
         }
     }
-
-   /* public String saveImage(Bitmap myBitmap) {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        myBitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-        File wallpaperDirectory = new File(
-                Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY);
-        // have the object build the directory structure, if needed.
-        if (!wallpaperDirectory.exists()) {
-            wallpaperDirectory.mkdirs();
-        }
-
-        try {
-            File f = new File(wallpaperDirectory, Calendar.getInstance()
-                    .getTimeInMillis() + ".jpg");
-            f.createNewFile();
-            FileOutputStream fo = new FileOutputStream(f);
-            fo.write(bytes.toByteArray());
-            MediaScannerConnection.scanFile(this,
-                    new String[]{f.getPath()},
-                    new String[]{"image/jpeg"}, null);
-            fo.close();
-            Log.d("TAG", "File Saved::--->" + f.getAbsolutePath());
-
-            //Toast.makeText(DetailTripActivity.this, "Image Saved!", Toast.LENGTH_SHORT).show();
-
-            return f.getAbsolutePath();
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
-        return "";
-    }*/
-
 
     public String saveImage(Bitmap myBitmap) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
@@ -301,20 +277,50 @@ public class DetailTripActivity extends AppCompatActivity {
             return;
         }
 
-        File file = new File(strFilePath);
-        // create RequestBody instance from file
-        RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+        String fileName = Calendar.getInstance()
+                .getTimeInMillis() + ".jpg";
 
-        MultipartBody.Part fileData = MultipartBody.Part.createFormData("file", iv_image_selected.getDisplay().getName(), requestFile);
+        String path = Environment.getExternalStorageDirectory().toString() + IMAGE_DIRECTORY;
+        OutputStream fOut = null;
+        File fileU = new File(path, fileName); // the File to save , append increasing numeric counter to prevent files from getting overwritten.
+        try {
+            fOut = new FileOutputStream(fileU);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+
+        imageBitmap.compress(Bitmap.CompressFormat.JPEG, 85, fOut); // saving the Bitmap to a file compressed as a JPEG with 85% compression rate
+        try {
+            fOut.flush(); // Not really required
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            fOut.close(); // do not forget to close the stream
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // use the FileUtils to get the actual file by uri
+        File file = new File(String.valueOf(fileU));
+
+        // create RequestBody instance from file
+        RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"),file);
+
+        // MultipartBody.Part is used to send also the actual file name
+        MultipartBody.Part body = MultipartBody.Part.createFormData(fileName, file.getName(), requestFile);
+        RequestBody _id = RequestBody.create(okhttp3.MultipartBody.FORM, _id_trip);
+        RequestBody user = RequestBody.create(okhttp3.MultipartBody.FORM, "593526ab66a1cd0004b50d1e");
 
         MysocialEndpoints api = MysocialEndpoints.retrofit.create(MysocialEndpoints.class);
-        Call<String> call = api.uploadTripFiles(
-                _id_trip, "593526ab66a1cd0004b50d1e", fileData
+        Call<Anwser> call = api.uploadTripFiles(
+                _id, user, body
         );
-        call.enqueue(new Callback<String>() {
+        call.enqueue(new Callback<Anwser>() {
 
             @Override
-            public void onResponse(Call<String> call, Response<String> response) {
+            public void onResponse(Call<Anwser> call, Response<Anwser> response) {
                 if(response.code() == 200) {
 
                     //spinner.setVisibility(View.GONE);
@@ -323,7 +329,7 @@ public class DetailTripActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<String> call, Throwable t) {
+            public void onFailure(Call<Anwser> call, Throwable t) {
                 t.printStackTrace();
                 //spinner.setVisibility(View.GONE);
                 Toast.makeText(DetailTripActivity.this, "Error Saving!", Toast.LENGTH_SHORT).show();
