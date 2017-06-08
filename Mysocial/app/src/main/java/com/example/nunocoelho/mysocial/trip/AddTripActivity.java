@@ -29,8 +29,10 @@ import com.example.nunocoelho.mysocial.mysocialapi.MysocialEndpoints;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Calendar;
 
 import okhttp3.MediaType;
@@ -50,6 +52,7 @@ public class AddTripActivity extends AppCompatActivity {
     private String strTitle, strCountry, strCity, strDescription, strDate, strFilePath;
     private static final String IMAGE_DIRECTORY = "/demonuts";
     private int GALLERY = 1, CAMERA = 2;
+    private Bitmap imageBitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -246,27 +249,48 @@ public class AddTripActivity extends AppCompatActivity {
     private void loadFiles()
     {
 
-        File file = new File(strFilePath);
-        // create RequestBody instance from file
-        RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+        String path = Environment.getExternalStorageDirectory().toString() + IMAGE_DIRECTORY;
+        OutputStream fOut = null;
+        File fileU = new File(path, "temp.jpg"); // the File to save , append increasing numeric counter to prevent files from getting overwritten.
+        try {
+            fOut = new FileOutputStream(fileU);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
 
-        MultipartBody.Part fileData = MultipartBody.Part.createFormData("file", iv_phototrip.getDisplay().getName(), requestFile);
-        MultipartBody.Part folder = MultipartBody.Part.createFormData("folder", "LeadDocuments");
-        MultipartBody.Part name = MultipartBody.Part.createFormData("name", iv_phototrip.getDisplay().getName());
+
+        imageBitmap.compress(Bitmap.CompressFormat.JPEG, 85, fOut); // saving the Bitmap to a file compressed as a JPEG with 85% compression rate
+        try {
+            fOut.flush(); // Not really required
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            fOut.close(); // do not forget to close the stream
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // use the FileUtils to get the actual file by uri
+        File file = new File(String.valueOf(fileU));
+
+        // create RequestBody instance from file
+        RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"),file);
 
         // MultipartBody.Part is used to send also the actual file name
-        //MultipartBody.Part body = MultipartBody.Part.createFormData("picture", iv_phototrip.getDisplay().getName(), strFilePath);
+        MultipartBody.Part body = MultipartBody.Part.createFormData("temp.jpg", file.getName(), requestFile);
 
         MysocialEndpoints api = MysocialEndpoints.retrofit.create(MysocialEndpoints.class);
-        Call<String> call = api.uploadTripFiles(
-                "593525c466a1cd0004b50d1c", "593526ab66a1cd0004b50d1e", fileData
-                //limit, page, number, sort, title//last one the search field name
-                //title
+        RequestBody _id = RequestBody.create(okhttp3.MultipartBody.FORM, "593526ab66a1cd0004b50d1e");
+        RequestBody user = RequestBody.create(okhttp3.MultipartBody.FORM, "593526ab66a1cd0004b50d1e");
+
+        Call<Anwser> call = api.uploadTripFiles(
+                _id, user, body
         );
-        call.enqueue(new Callback<String>() {
+        call.enqueue(new Callback<Anwser>() {
 
             @Override
-            public void onResponse(Call<String> call, Response<String> response) {
+            public void onResponse(Call<Anwser> call, Response<Anwser> response) {
                 if(response.code() == 200) {
 
                     //spinner.setVisibility(View.GONE);
@@ -275,7 +299,7 @@ public class AddTripActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<String> call, Throwable t) {
+            public void onFailure(Call<Anwser> call, Throwable t) {
                 t.printStackTrace();
                 //spinner.setVisibility(View.GONE);
                 Toast.makeText(AddTripActivity.this, "Erro Saving!", Toast.LENGTH_SHORT).show();

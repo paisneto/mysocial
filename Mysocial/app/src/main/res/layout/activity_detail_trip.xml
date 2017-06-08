@@ -256,17 +256,7 @@
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toTopOf="@+id/lv_momments">
-
-        <!--<ImageView
-            android:id="@+id/iv_fototrip"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            app:srcCompat="@android:drawable/ic_menu_camera"
-            tools:ignore="ContentDescription,InefficientWeight"
-            tools:layout_editor_absoluteX="116dp"
-            tools:layout_editor_absoluteY="319dp" />-->
-
+        
         <ImageView
             android:id="@+id/iv_image_selected"
             android:layout_width="50dp"
@@ -276,13 +266,15 @@
             android:scaleType="fitXY"
             android:src="@mipmap/ic_launcher_round"
             tools:layout_editor_absoluteX="24dp"
-            tools:layout_editor_absoluteY="89dp" />
+            tools:layout_editor_absoluteY="89dp"
+            tools:ignore="ContentDescription,InefficientWeight" />
 
         <ImageButton
             android:id="@+id/iv_fototrip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@android:drawable/ic_menu_camera" />
+            android:src="@android:drawable/ic_menu_camera"
+            tools:ignore="ContentDescription" />
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

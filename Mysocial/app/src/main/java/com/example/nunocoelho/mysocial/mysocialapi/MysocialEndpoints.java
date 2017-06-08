@@ -62,12 +62,9 @@ public interface MysocialEndpoints {
     );
 
     @Multipart
-    @POST("trips/{_id}/users/{user}/files/")
-    Call<String> uploadTripFiles(
-            @Path("_id") String _id,
-            @Path("user") String user,
-            @Part MultipartBody.Part file
-    );
+    //@POST("trips/{_id}/users/{user}/files/")
+    @POST("trips/users/files/")
+    Call<Anwser> uploadTripFiles(@Part("_id") RequestBody _id, @Part("user") RequestBody user, @Part MultipartBody.Part file);
 
 
     /*Moments*/
