@@ -1,4 +1,8 @@
 package com.example.nunocoelho.mysocial.mysocialapi;
+import com.example.nunocoelho.mysocial.moment.AnwserMoment;
+import com.example.nunocoelho.mysocial.moment.EntryDetailsMoment;
+import com.example.nunocoelho.mysocial.trip.Anwser;
+
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -12,10 +16,6 @@ import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
 
-import com.example.nunocoelho.mysocial.moment.AnwserMoment;
-import com.example.nunocoelho.mysocial.moment.EntryDetailsMoment;
-import com.example.nunocoelho.mysocial.trip.Anwser;
-
 /**
  * Created by Nuno Coelho on 21/05/2017.
  */
@@ -25,8 +25,7 @@ public interface MysocialEndpoints {
     //pesquisar viagem por id
     final static String BASE_API_URL = "https://secret-plains-68464.herokuapp.com/api/v1/";
     final static String BASE_URL = "https://secret-plains-68464.herokuapp.com/";
-    final static String MEDIA_URL = BASE_URL + "uploads/";
-
+    final static String MEDIA_URL = "https://s3.eu-west-2.amazonaws.com/meimysocial/upload/media/";
 
     //
     @GET("trips/?limit=500&page=1&number=100&sort=-created")//&title={title}")
@@ -38,21 +37,21 @@ public interface MysocialEndpoints {
            // @Path("title") String title//search field name
     );
 
-    @GET("trips/{id}/trip/")
+    @GET("trips/{id}/")
     Call<Anwser> getTripPhrase(
             @Path("id") String trip
             /*,
             @Query("docs") String docs*/
     );
 
-    @GET("trips/{id}/trip/")
+    @GET("trips/{id}/")
     Call<Anwser> getTripbyId(
             @Path("id") String id
     );
 
     //inserir uma viagem
     @FormUrlEncoded
-    @POST("trips/trip/")
+    @POST("trips/")
     Call<Anwser> addTrip(
             @Field("title") String title,
             @Field("country") String country,
