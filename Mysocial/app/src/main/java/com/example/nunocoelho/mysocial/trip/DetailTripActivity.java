@@ -4,18 +4,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -31,15 +27,12 @@ import android.widget.Toast;
 
 import com.example.nunocoelho.mysocial.LoginActivity;
 import com.example.nunocoelho.mysocial.R;
-import com.example.nunocoelho.mysocial.adapters.DetailTripAdapter;
 import com.example.nunocoelho.mysocial.adapters.MomentsAdapter;
 import com.example.nunocoelho.mysocial.moment.AddMommentActivity;
 import com.example.nunocoelho.mysocial.moment.AnwserMoment;
 import com.example.nunocoelho.mysocial.moment.DetailMomentActivity;
 import com.example.nunocoelho.mysocial.moment.EntryDetailsMoment;
 import com.example.nunocoelho.mysocial.mysocialapi.MysocialEndpoints;
-
-import org.w3c.dom.Text;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -50,8 +43,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
-
-import javax.annotation.Resource;
+import java.util.UUID;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -277,7 +269,7 @@ public class DetailTripActivity extends AppCompatActivity {
             return;
         }
 
-        String fileName = Calendar.getInstance()
+        String fileName = UUID.randomUUID().toString() + "_" + Calendar.getInstance()
                 .getTimeInMillis() + ".jpg";
 
         String path = Environment.getExternalStorageDirectory().toString() + IMAGE_DIRECTORY;

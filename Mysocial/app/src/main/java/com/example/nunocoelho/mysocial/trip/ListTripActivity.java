@@ -1,6 +1,6 @@
 package com.example.nunocoelho.mysocial.trip;
 
-import android.app.ProgressDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -9,27 +9,21 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.nunocoelho.mysocial.LoginActivity;
 import com.example.nunocoelho.mysocial.R;
 import com.example.nunocoelho.mysocial.adapters.DetailTripAdapter;
-import com.example.nunocoelho.mysocial.login.Details;
+import com.example.nunocoelho.mysocial.helpers.Utils;
 import com.example.nunocoelho.mysocial.mysocialapi.MysocialEndpoints;
 
 import java.util.ArrayList;
 
-import io.realm.Realm;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -37,7 +31,6 @@ import retrofit2.Response;
 public class ListTripActivity extends AppCompatActivity {
 
     //declaração das variaveis
-
     private static DetailTripAdapter adapter;
     private Button btn_search;
     private FloatingActionButton btn_addtrip;
@@ -79,20 +72,7 @@ public class ListTripActivity extends AppCompatActivity {
             }
         });
 
-        //spinner.setVisibility(View.VISIBLE);
         showTrips();
-        //spinner.setVisibility(View.GONE);
-
-        //botao para chamar a pesquisa
-        /*btn_search.setOnClickListener(new View.OnClickListener(
-        ) {
-            @Override
-            public void onClick(View v) {
-                //verifica se os dados de login estão corretos
-                goSearchActivity();
-            }
-        });*/
-
        //botao para adicionar uma nova viagem
        btn_addtrip.setOnClickListener(new View.OnClickListener(
         ) {
@@ -128,18 +108,8 @@ public class ListTripActivity extends AppCompatActivity {
 
     //metodo para carregar as viagens todoas
     protected void showTrips(){
-        //spinner = (ProgressBar)findViewById(R.id.pb_progressbar);
-        //spinner.setVisibility(ProgressBar.VISIBLE);
-
-        final ProgressDialog nDialog;
-        nDialog = new ProgressDialog(this);
-        nDialog.setMessage("Loading..");
-        nDialog.setTitle("Getting Data");
-        //nDialog.getWindow().setBackgroundDrawableResource(R.color.colorTransparent);
-        //nDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        //nDialog.setIndeterminate(false);
-        nDialog.setCancelable(true);
-        nDialog.show();
+        final Dialog progress_spinner = Utils.LoadingSpinner(this);
+        progress_spinner.show();
 
         String limit, page, number, sort, title;
 
@@ -161,16 +131,15 @@ public class ListTripActivity extends AppCompatActivity {
                     }
                     adapter.notifyDataSetChanged();
                     adapter.notifyDataSetInvalidated();
-                    //spinner.setVisibility(View.GONE);
-                    nDialog.dismiss();
+                    progress_spinner.dismiss();
                 }
             }
 
             @Override
             public void onFailure(Call<Anwser> call, Throwable t) {
                 t.printStackTrace();
-                //spinner.setVisibility(View.GONE);
-                nDialog.dismiss();
+                progress_spinner.dismiss();
+                Toast.makeText(ListTripActivity.this, "Error - Loading data!", Toast.LENGTH_SHORT).show();
             }
         });
     }
