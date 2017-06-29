@@ -50,13 +50,13 @@ public class UsersAdapter extends BaseAdapter {
             view = inflater.inflate(R.layout.login,null);
         }
 
-        tv_username = (TextView) view.findViewById(R.id.tv_username);
-        tv_password = (TextView) view.findViewById(R.id.tv_password);
+        //tv_username = (TextView) view.findViewById(R.id.tv_username);
+        //tv_password = (TextView) view.findViewById(R.id.tv_password);
 
         Details p = datasource.get(i);
 
-        tv_username.setText(p.username + "");
-        tv_password.setText(p.password + "");
+        //tv_username.setText(p.username + "");
+        //tv_password.setText(p.password + "");
 
         return view;
 
