@@ -20,11 +20,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.nunocoelho.mysocial.LoginActivity;
 import com.example.nunocoelho.mysocial.R;
 import com.example.nunocoelho.mysocial.adapters.DetailTripAdapter;
 import com.example.nunocoelho.mysocial.helpers.Utils;
 import com.example.nunocoelho.mysocial.mysocialapi.MysocialEndpoints;
+import com.facebook.login.LoginManager;
 
 import java.util.ArrayList;
 
@@ -60,7 +60,6 @@ public class ListTripActivity extends AppCompatActivity
         tv_country  = (TextView)findViewById(R.id.tv_country);
         btn_addtrip = (FloatingActionButton)findViewById(R.id.btn_addtrip);
         //btn_search  = (android.widget.Button)findViewById(R.id.btn_back);
-
 
         lv_trips    = (ListView) findViewById(R.id.lv_trips);
 
@@ -99,6 +98,12 @@ public class ListTripActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+
+
+       /* NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+
+        MenuItem btnFacebookLogout = navigationView.getMenu().findItem(R.id.nav_send);
+        btnFacebookLogout.setOnMenuItemClickListener();*/
 
     }
 
@@ -245,7 +250,8 @@ public class ListTripActivity extends AppCompatActivity
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
-
+            LoginManager.getInstance().logOut();
+            finish();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

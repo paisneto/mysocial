@@ -36,5 +36,6 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'javax.annotation:javax.annotation-api:1.2'
     compile 'de.hdodenhof:circleimageview:2.1.0'
+    compile 'com.facebook.android:facebook-android-sdk:[4,5)'
 
 }

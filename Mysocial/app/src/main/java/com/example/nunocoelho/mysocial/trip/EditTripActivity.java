@@ -5,17 +5,16 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -35,7 +34,7 @@ import retrofit2.Response;
 
 public class EditTripActivity extends AppCompatActivity {
     private Button btn_save, btn_delete, btn_addmomment;
-    private ImageButton btn_back;
+    private Button btn_back;
     private EditText et_title, et_country,et_city,et_description,et_date;
     private ImageView iv_phototrip;
     private String strTitle, strCountry, strCity, strDescription, strDate;
@@ -49,7 +48,7 @@ public class EditTripActivity extends AppCompatActivity {
 
         btn_addmomment = (Button) findViewById(R.id.btn_addmomment);
         btn_delete     = (Button) findViewById(R.id.btn_delete);
-        btn_back       = (ImageButton) findViewById(R.id.btn_back);
+        btn_back       = (Button) findViewById(R.id.btn_back);
         btn_save       = (Button) findViewById(R.id.btn_save);
         iv_phototrip   = (ImageView) findViewById(R.id.iv_fototrip);
         et_title       = (EditText) findViewById(R.id.et_title);
