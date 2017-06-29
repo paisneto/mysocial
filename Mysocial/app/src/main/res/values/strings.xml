@@ -50,4 +50,9 @@
     <string name="click_here">Click here.</string>
     <string name="tv_editmomment">Edit Momment</string>
     <string name="logout">Logout</string>
+
+
+    <!--Side Menu-->
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 </resources>

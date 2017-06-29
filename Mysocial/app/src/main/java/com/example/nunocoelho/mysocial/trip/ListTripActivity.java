@@ -1,43 +1,41 @@
 package com.example.nunocoelho.mysocial.trip;
 
-import android.app.ProgressDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.nunocoelho.mysocial.LoginActivity;
 import com.example.nunocoelho.mysocial.R;
 import com.example.nunocoelho.mysocial.adapters.DetailTripAdapter;
-import com.example.nunocoelho.mysocial.login.Details;
+import com.example.nunocoelho.mysocial.helpers.Utils;
 import com.example.nunocoelho.mysocial.mysocialapi.MysocialEndpoints;
 
 import java.util.ArrayList;
 
-import io.realm.Realm;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ListTripActivity extends AppCompatActivity {
+public class ListTripActivity extends AppCompatActivity
+     implements NavigationView.OnNavigationItemSelectedListener {
 
     //declaração das variaveis
-
     private static DetailTripAdapter adapter;
     private Button btn_search;
     private FloatingActionButton btn_addtrip;
@@ -79,20 +77,7 @@ public class ListTripActivity extends AppCompatActivity {
             }
         });
 
-        //spinner.setVisibility(View.VISIBLE);
         showTrips();
-        //spinner.setVisibility(View.GONE);
-
-        //botao para chamar a pesquisa
-        /*btn_search.setOnClickListener(new View.OnClickListener(
-        ) {
-            @Override
-            public void onClick(View v) {
-                //verifica se os dados de login estão corretos
-                goSearchActivity();
-            }
-        });*/
-
        //botao para adicionar uma nova viagem
        btn_addtrip.setOnClickListener(new View.OnClickListener(
         ) {
@@ -102,6 +87,19 @@ public class ListTripActivity extends AppCompatActivity {
 
             }
         });
+
+
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+
     }
 
     //metodo para voltar para a LoginActivity
@@ -128,18 +126,8 @@ public class ListTripActivity extends AppCompatActivity {
 
     //metodo para carregar as viagens todoas
     protected void showTrips(){
-        //spinner = (ProgressBar)findViewById(R.id.pb_progressbar);
-        //spinner.setVisibility(ProgressBar.VISIBLE);
-
-        final ProgressDialog nDialog;
-        nDialog = new ProgressDialog(this);
-        nDialog.setMessage("Loading..");
-        nDialog.setTitle("Getting Data");
-        //nDialog.getWindow().setBackgroundDrawableResource(R.color.colorTransparent);
-        //nDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        //nDialog.setIndeterminate(false);
-        nDialog.setCancelable(true);
-        nDialog.show();
+        final Dialog progress_spinner = Utils.LoadingSpinner(this);
+        progress_spinner.show();
 
         String limit, page, number, sort, title;
 
@@ -161,48 +149,107 @@ public class ListTripActivity extends AppCompatActivity {
                     }
                     adapter.notifyDataSetChanged();
                     adapter.notifyDataSetInvalidated();
-                    //spinner.setVisibility(View.GONE);
-                    nDialog.dismiss();
+                    progress_spinner.dismiss();
                 }
             }
 
             @Override
             public void onFailure(Call<Anwser> call, Throwable t) {
                 t.printStackTrace();
-                //spinner.setVisibility(View.GONE);
-                nDialog.dismiss();
+                progress_spinner.dismiss();
+                Toast.makeText(ListTripActivity.this, "Error - Loading data!", Toast.LENGTH_SHORT).show();
             }
         });
+
+
+
+    }
+
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        // Inflate the menu; this adds items to the action bar if it is present.
+//        getMenuInflater().inflate(R.menu.layout_search, menu);
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        Intent intent;
+//        switch (item.getItemId()) {
+//           // case R.id.action_settings:
+//                // User chose the "Settings" item, show the app settings UI...
+//           //     return true;
+//
+//            case R.id.action_search:
+//                intent = new Intent(this, SearchTripActivity.class);
+//                startActivity(intent);
+//                return true;
+//            case R.id.logout:
+//                intent = new Intent(this, LoginActivity.class);
+//                intent.putExtra("kill_user", "yes");
+//                startActivity(intent);
+//            default:
+//                // If we got here, the user's action was not recognized.
+//                // Invoke the superclass to handle it.
+//                return super.onOptionsItemSelected(item);
+//
+//        }
+//    }
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.layout_search, menu);
+        getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Intent intent;
-        switch (item.getItemId()) {
-           // case R.id.action_settings:
-                // User chose the "Settings" item, show the app settings UI...
-           //     return true;
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
 
-            case R.id.action_search:
-                intent = new Intent(this, SearchTripActivity.class);
-                startActivity(intent);
-                return true;
-            case R.id.logout:
-                intent = new Intent(this, LoginActivity.class);
-                intent.putExtra("kill_user", "yes");
-                startActivity(intent);
-            default:
-                // If we got here, the user's action was not recognized.
-                // Invoke the superclass to handle it.
-                return super.onOptionsItemSelected(item);
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    //@Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.nav_camera) {
+            // Handle the camera action
+        } else if (id == R.id.nav_gallery) {
+
+        } else if (id == R.id.nav_slideshow) {
+
+        } else if (id == R.id.nav_manage) {
+
+        } else if (id == R.id.nav_share) {
+
+        } else if (id == R.id.nav_send) {
 
         }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 }
