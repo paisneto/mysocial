@@ -25,7 +25,8 @@ public interface MysocialEndpoints {
     //pesquisar viagem por id
     final static String BASE_API_URL = "https://secret-plains-68464.herokuapp.com/api/v1/";
     final static String BASE_URL = "https://secret-plains-68464.herokuapp.com/";
-    final static String MEDIA_URL = "https://s3.eu-west-2.amazonaws.com/meimysocial/upload/media/";
+    //final static String MEDIA_URL = "https://s3.eu-west-2.amazonaws.com/meimysocial/upload/media/";
+    final static String MEDIA_URL = "https://meimysocial.blob.core.windows.net/upload/";
 
     //
     @GET("trips/?limit=500&page=1&number=100&sort=-created")//&title={title}")

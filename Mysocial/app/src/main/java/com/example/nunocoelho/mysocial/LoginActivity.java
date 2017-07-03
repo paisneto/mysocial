@@ -1,33 +1,49 @@
 package com.example.nunocoelho.mysocial;
 
 import android.content.Intent;
-import android.os.UserHandle;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.example.nunocoelho.mysocial.adapters.UsersAdapter;
-import com.example.nunocoelho.mysocial.login.Anwser;
 import com.example.nunocoelho.mysocial.login.Details;
 import com.example.nunocoelho.mysocial.trip.ListTripActivity;
+import com.facebook.AccessToken;
+import com.facebook.AccessTokenTracker;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 
-import java.util.UUID;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import io.realm.Realm;
-import io.realm.RealmList;
-import io.realm.RealmQuery;
-import io.realm.RealmResults;
 
 
 public class LoginActivity extends AppCompatActivity {
     //declaração das variaveis
     Realm realm = null;
 
+    CallbackManager callbackManager;
+    private AccessTokenTracker accessTokenTracker;
+    private AccessToken accessToken;
+
     private Button btn_login;
     EditText tv_username, tv_password;
     public final static String EXTRA_MESSAGE = "com.example.nunocoelho.mysocial.MESSAGE";
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,28 +53,128 @@ public class LoginActivity extends AppCompatActivity {
         final Intent intent = getIntent();
 
         String logOut = intent.getStringExtra("kill_user");
-        if (logOut != null && logOut.equals("yes"))
+
+        accessTokenTracker = new AccessTokenTracker(){
+            @Override
+            protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken){
+                if (oldAccessToken!=null){ Log.d("Facebook",oldAccessToken.getToken()); }
+                else { Log.d("Facebook",currentAccessToken.getToken()); }
+            }
+        };
+
+        accessToken = AccessToken.getCurrentAccessToken();
+        if (accessToken!=null){
+            //esta authenticado
+            Log.d("Facebook", "facebook:accesstoken:"+ accessToken.getToken());
+
+            goValidatUserLoggedActivity();
+            //guardar no realm e mostrar a foto do utilizador etc
+        }
+
+        /*if (logOut != null && logOut.equals("yes"))
             logOutUser();
         else
-            goValidatUserLoggedActivity();
+            goValidatUserLoggedActivity();*/
 
+        callbackManager = CallbackManager.Factory.create();
         btn_login = (Button)findViewById(R.id.btn_login);
+        LoginButton loginButton = (LoginButton) findViewById(R.id.login_button);
+        loginButton.setReadPermissions("email", "public_profile", "user_birthday");
+        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            Details user = new Details();
+
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                Log.d("Facebook",loginResult.getAccessToken().getUserId());
+                Log.d("Facebook",loginResult.getAccessToken().getToken());
+                loadFacebookInfo(loginResult, user);
+
+
+            }
+
+            @Override
+            public void onCancel() {
+
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+
+            }
+        });
+
+        accessTokenTracker = new AccessTokenTracker() {
+            @Override
+            protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken) {
+                //TODO: se estiver a null tenho de limpar do realm o user forcando o logout
+                if (currentAccessToken==null)
+                {
+                    logOutUser();
+                }
+            }
+        };
+
+        accessTokenTracker.startTracking();
+
         btn_login.setOnClickListener(new View.OnClickListener(
         ) {
             @Override
             public void onClick(View v) {
-                //verifica se os dados de login estão corretos
-                //int newUser = 0, resulUserLogged = 0;
-                //resulUserLogged = goValidatUserLoggedActivity();
-
-                //if(resulUserLogged == 0) newUser = goSaveUserLogin();
-
-                //if (newUser == 1) goListTripActivity();
-                //goListTripActivity();
-
                 goValidatUserLoggedActivity();
             }
         });
+
+    }
+
+    protected void loadFacebookInfo(final LoginResult loginResult, final Details user)
+    {
+        GraphRequest request = GraphRequest.newMeRequest(
+                loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback(){
+
+                    @Override
+                    public void onCompleted(JSONObject object, GraphResponse response){
+                        try{
+                            Log.d("Facebook", response.getJSONObject().getString("email"));
+                            Log.d("Facebook", response.getJSONObject().getString("first_name"));
+                            Log.d("Facebook", response.getJSONObject().getString("last_name"));
+                            goValidatUserLoggedActivity();
+                        } catch (JSONException e)
+                        {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }
+        );
+        Bundle param = new Bundle();
+        param.putString("fields", "id,email,first_name,last_name,gender");
+        request.setParameters(param);
+        request.executeAsync();
+    }
+
+    protected void getProfilePicture(final LoginResult loginResult, final Details user)
+    {
+        Bundle param = new Bundle();
+        param.putBoolean("redirect", false);
+
+        new GraphRequest(
+                loginResult.getAccessToken(), "/"+loginResult.getAccessToken().getUserId()+"/picture", param, HttpMethod.GET,
+                new GraphRequest.Callback(){
+                    public void onCompleted(GraphResponse response){
+                        try{
+                            Log.d("Facebook", response.getJSONObject().getJSONObject("data").getString("url"));
+
+                            //TODO: Aqui enviar todos dos dados para a API para guardar lá a informação
+
+
+
+                        } catch (JSONException e)
+                        {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+        ).executeAsync();
 
     }
 
