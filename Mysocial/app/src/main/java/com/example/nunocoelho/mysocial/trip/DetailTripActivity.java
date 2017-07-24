@@ -79,7 +79,7 @@ public class DetailTripActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setTitle("Detail Trip");
 
-        addListenerOnButton();
+        //addListenerOnButton();
 
         btn_addmomment = (FloatingActionButton) findViewById(R.id.btn_addmomment);
         //btn_back = (Button) findViewById(R.id.btn_back);
@@ -89,7 +89,7 @@ public class DetailTripActivity extends AppCompatActivity {
         tv_citydetail = (TextView) findViewById(R.id.tv_citydetail);
         tv_datedetail = (TextView) findViewById(R.id.tv_datedetail);
         tv_descriptiondetail = (TextView) findViewById(R.id.tv_descriptiondetail);
-        iv_image_selected = (ImageView) findViewById(R.id.iv_image_selected);
+        //iv_image_selected = (ImageView) findViewById(R.id.iv_image_selected);
 
         _id_trip = intent.getStringExtra("_id");
         tv_titledetail.setText(intent.getStringExtra("title"));
@@ -142,25 +142,25 @@ public class DetailTripActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void addListenerOnButton() {
-
-        ImageButton imageButton = (ImageButton) findViewById(R.id.iv_fototrip);
-
-        imageButton.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View arg0) {
-
-                showPictureDialog();
-
-                Toast.makeText(DetailTripActivity.this,
-                        "ImageButton is clicked!", Toast.LENGTH_SHORT).show();
-
-            }
-
-        });
-
-    }
+//    public void addListenerOnButton() {
+//
+//        ImageButton imageButton = (ImageButton) findViewById(R.id.iv_fototrip);
+//
+//        imageButton.setOnClickListener(new View.OnClickListener() {
+//
+//            @Override
+//            public void onClick(View arg0) {
+//
+//                showPictureDialog();
+//
+//                Toast.makeText(DetailTripActivity.this,
+//                        "ImageButton is clicked!", Toast.LENGTH_SHORT).show();
+//
+//            }
+//
+//        });
+//
+//    }
 
     //inserir imagem da galeria ou tirando uma foto
     private void showPictureDialog(){
