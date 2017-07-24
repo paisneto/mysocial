@@ -1,26 +1,18 @@
 package com.example.nunocoelho.mysocial.adapters;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.nunocoelho.mysocial.R;
+import com.example.nunocoelho.mysocial.helpers.Utils;
 import com.example.nunocoelho.mysocial.mysocialapi.MysocialEndpoints;
-import com.example.nunocoelho.mysocial.trip.Anwser;
 import com.example.nunocoelho.mysocial.trip.EntryDetails;
-import com.example.nunocoelho.mysocial.trip.ListTripActivity;
 
-import org.json.JSONObject;
-
-import java.io.InputStream;
 import java.util.List;
 
 
@@ -74,31 +66,8 @@ public class DetailTripAdapter extends ArrayAdapter<EntryDetails> {
         tv_title.setText(value.getTitle());
         tv_country.setText(value.getCountry());
         if (value.getFilename().isEmpty()) img_avatar.setImageResource(R.drawable.avatar_anon);
-        else new DownloadImageTask((ImageView) convertView.findViewById(R.id.img_avatar)).execute(MysocialEndpoints.MEDIA_URL + value.getFilename());
+        else new Utils.DownloadImageTask((ImageView) convertView.findViewById(R.id.img_avatar)).execute(MysocialEndpoints.MEDIA_URL + value.getFilename());
 
         return convertView;
     }
-
-    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-        ImageView bmImage;
-
-        public DownloadImageTask(ImageView bmImage) {
-            this.bmImage = bmImage;
-        }
-
-        protected Bitmap doInBackground(String... urls) {
-            String urldisplay = urls[0];
-            Bitmap mIcon11 = null;
-            try {
-                InputStream in = new java.net.URL(urldisplay).openStream();
-                mIcon11 = BitmapFactory.decodeStream(in);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return mIcon11;
-        }
-
-        protected void onPostExecute(Bitmap result) { bmImage.setImageBitmap(result); }
-    }
-
 }

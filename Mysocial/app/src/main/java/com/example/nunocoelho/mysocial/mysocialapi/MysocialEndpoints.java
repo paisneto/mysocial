@@ -1,4 +1,5 @@
 package com.example.nunocoelho.mysocial.mysocialapi;
+
 import com.example.nunocoelho.mysocial.moment.AnwserMoment;
 import com.example.nunocoelho.mysocial.moment.EntryDetailsMoment;
 import com.example.nunocoelho.mysocial.trip.Anwser;
@@ -15,6 +16,7 @@ import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 /**
  * Created by Nuno Coelho on 21/05/2017.
@@ -70,8 +72,9 @@ public interface MysocialEndpoints {
     /*Moments*/
     //@GET("moments/trips/{trip}/moment/")
     @GET("moments/?limit=500&page=1&number=20&sort=-created")
+    //@GET("moments/?limit=500&page=1&number=20&sort=-created&trip={trip}")
     Call<AnwserMoment> getMomentsTrip(
-            //@Path("trip") String trip
+            @Query("trip") String trip
     );
 
     /*

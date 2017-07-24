@@ -1,6 +1,5 @@
 package com.example.nunocoelho.mysocial.moment;
 
-import com.example.nunocoelho.mysocial.trip.EntryDetails;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;

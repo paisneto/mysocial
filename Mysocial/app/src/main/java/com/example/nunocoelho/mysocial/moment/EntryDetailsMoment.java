@@ -29,7 +29,11 @@ public class EntryDetailsMoment {
     private String narrative;
     private String lat;
     private String lon;
+    private String[] classification;
     private String trip;
+    private String[] comments;
+    private String originalname;
+    private String path;
 
     private List<EntryDetailsMoment> entradas;
     public EntryDetailsMoment() {
@@ -41,6 +45,10 @@ public class EntryDetailsMoment {
         lat="";
         lon="";
         trip="";
+        classification = null;
+        comments = null;
+        originalname="";
+        path="";
     }
 
     public String getId() {
@@ -100,6 +108,46 @@ public class EntryDetailsMoment {
     }
 
     public void setTrip(String trip) { this.trip = trip;}
+
+    public String[] getClassification ()
+    {
+        return classification;
+    }
+
+    public void setClassification (String[] classification)
+    {
+        this.classification = classification;
+    }
+
+    public String getPath ()
+    {
+        return path;
+    }
+
+    public void setPath (String path)
+    {
+        this.path = path;
+    }
+
+    public String[] getComments ()
+    {
+        return comments;
+    }
+
+    public void setComments (String[] comments)
+    {
+        this.comments = comments;
+    }
+
+    public String getOriginalname ()
+    {
+        return originalname;
+    }
+
+    public void setOriginalname (String originalname)
+    {
+        this.originalname = originalname;
+    }
 
     public List<EntryDetailsMoment> getEntradas() {
         return entradas;

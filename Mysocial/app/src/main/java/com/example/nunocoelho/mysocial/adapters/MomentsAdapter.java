@@ -5,11 +5,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.nunocoelho.mysocial.R;
+import com.example.nunocoelho.mysocial.helpers.Utils;
 import com.example.nunocoelho.mysocial.moment.EntryDetailsMoment;
-import com.example.nunocoelho.mysocial.trip.EntryDetails;
+import com.example.nunocoelho.mysocial.mysocialapi.MysocialEndpoints;
 
 import java.util.List;
 
@@ -47,6 +49,7 @@ public class MomentsAdapter extends ArrayAdapter<EntryDetailsMoment> {
 
         EntryDetailsMoment value = getItem(i);
         TextView tv_title, tv_country;
+        ImageView img_avatar;
 
         if (convertView == null){
             LayoutInflater inflater = LayoutInflater.from(contexto);
@@ -54,10 +57,14 @@ public class MomentsAdapter extends ArrayAdapter<EntryDetailsMoment> {
         }
 
         tv_title = (TextView)convertView.findViewById(R.id.tv_title);
+        img_avatar = (ImageView)convertView.findViewById(R.id.img_avatar);
         //tv_country = (TextView)convertView.findViewById(R.id.tv_country);
 
         tv_title.setText(value.getTitle());
         //tv_country.setText(value.getCountry());
+
+        if (value.getOriginalname().isEmpty()) img_avatar.setImageResource(R.drawable.avatar_anon);
+        else new Utils.DownloadImageTask((ImageView) convertView.findViewById(R.id.img_avatar)).execute(MysocialEndpoints.MEDIA_URL + value.getOriginalname());
         return convertView;
     }
 

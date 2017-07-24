@@ -1,5 +1,6 @@
 package com.example.nunocoelho.mysocial.trip;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -356,31 +357,32 @@ public class DetailTripActivity extends AppCompatActivity {
 
         MysocialEndpoints api = MysocialEndpoints.retrofit.create(MysocialEndpoints.class);
         Call<AnwserMoment> call = api.getMomentsTrip(
-                //_id_trip//"5929dcceef70ac00047d9635"
+                _id_trip//"5929dcceef70ac00047d9635"
         );
         call.enqueue(new Callback<AnwserMoment>() {
 
             @Override
             public void onResponse(Call<AnwserMoment> call, Response<AnwserMoment> response) {
-                //ImageView myImage = (ImageView) findViewById(R.id.img_avatar);
-
-
                 if(response.code() == 200) {
                     AnwserMoment resp = response.body();
                     for(EntryDetailsMoment e : resp.getEntradas()) {
                         entryDetailsMomentList.add(e);
                     }
-                    //myImage.setImageResource(R.drawable.ic_favorite_black_48dp);
                     adapter.notifyDataSetChanged();
                     adapter.notifyDataSetInvalidated();
-                    //spinner.setVisibility(View.GONE);
+                } else {
+                    Context context = getApplicationContext();
+                    CharSequence text = "Else DetailTripActivity toast!";
+                    int duration = Toast.LENGTH_LONG;
+
+                    Toast toast = Toast.makeText(context, text, duration);
+                    toast.show();
                 }
             }
 
             @Override
             public void onFailure(Call<AnwserMoment> call, Throwable t) {
                 t.printStackTrace();
-                //spinner.setVisibility(View.GONE);
             }
         });
     }

@@ -1,5 +1,6 @@
 package com.example.nunocoelho.mysocial.moment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -11,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.nunocoelho.mysocial.LoginActivity;
 import com.example.nunocoelho.mysocial.R;
@@ -125,7 +127,7 @@ public class DetailMomentActivity extends AppCompatActivity {
     protected void showMoments(){
         MysocialEndpoints api = MysocialEndpoints.retrofit.create(MysocialEndpoints.class);
         Call<AnwserMoment> call = api.getMomentsTrip(
-                //_id_trip//"5929dcceef70ac00047d9635"
+                _id_trip//"5929dcceef70ac00047d9635"
         );
         call.enqueue(new Callback<AnwserMoment>() {
 
@@ -138,6 +140,13 @@ public class DetailMomentActivity extends AppCompatActivity {
                     }
                     adapter.notifyDataSetChanged();
                     adapter.notifyDataSetInvalidated();
+                } else {
+                    Context context = getApplicationContext();
+                    CharSequence text = "Else DetailMomentActivity toast!";
+                    int duration = Toast.LENGTH_LONG;
+
+                    Toast toast = Toast.makeText(context, text, duration);
+                    toast.show();
                 }
             }
 
