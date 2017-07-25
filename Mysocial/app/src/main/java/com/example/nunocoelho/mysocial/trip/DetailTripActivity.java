@@ -57,7 +57,7 @@ public class DetailTripActivity extends AppCompatActivity {
     private static MomentsAdapter adapter;
     private Button btn_back;
     private String _id_trip, strFilePath;
-    private FloatingActionButton btn_addmomment;
+    private FloatingActionButton btn_addmomment, btn_share;
     private ImageView iv_image_selected;
     private ListView lv_momments;
     private TextView tv_titledetail, tv_countrydetail, tv_citydetail, tv_datedetail, tv_descriptiondetail;
@@ -81,6 +81,7 @@ public class DetailTripActivity extends AppCompatActivity {
         //addListenerOnButton();
 
         btn_addmomment = (FloatingActionButton) findViewById(R.id.btn_addmomment);
+        btn_share = (FloatingActionButton) findViewById(R.id.btn_share);
         //btn_back = (Button) findViewById(R.id.btn_back);
         //fab_search = (FloatingActionButton)findViewById(R.id.fab_search);
         tv_titledetail = (TextView)findViewById(R.id.tv_titledetail);
@@ -121,6 +122,14 @@ public class DetailTripActivity extends AppCompatActivity {
                 goAddMoment(intent);
             }
         });
+
+        btn_share.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shareTrip();
+            }
+        });
+
         //para voltar a ListTripActivity
 
        /* btn_back.setOnClickListener(new View.OnClickListener() {
@@ -381,6 +390,30 @@ public class DetailTripActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<AnwserMoment> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
+    }
+
+    //metodo para partilhar uma viagem
+    protected void shareTrip(){
+        MysocialEndpoints api = MysocialEndpoints.retrofit.create(MysocialEndpoints.class);
+        Call<String> call = api.shareTrip(
+                _id_trip, true
+        );
+        call.enqueue(new Callback<String>() {
+
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                if(response.code() == 200) {
+                    Toast.makeText(DetailTripActivity.this, "Shared to public!", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(DetailTripActivity.this, "Error Sharing!", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
                 t.printStackTrace();
             }
         });

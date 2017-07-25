@@ -63,6 +63,14 @@ public interface MysocialEndpoints {
             @Field("date") String date
     );
 
+    //inserir uma viagem
+    @FormUrlEncoded
+    @POST("trips/{id}/share/")
+    Call<String> shareTrip(
+            @Path("id") String id,
+            @Field("isprivate") Boolean isprivate
+    );
+
     @Multipart
     //@POST("trips/{_id}/users/{user}/files/")
     @POST("trips/users/files/")
@@ -70,23 +78,10 @@ public interface MysocialEndpoints {
 
 
     /*Moments*/
-    //@GET("moments/trips/{trip}/moment/")
     @GET("moments/?limit=500&page=1&number=20&sort=-created")
-    //@GET("moments/?limit=500&page=1&number=20&sort=-created&trip={trip}")
     Call<AnwserMoment> getMomentsTrip(
             @Query("trip") String trip
     );
-
-    /*
-    * "title": "Portugal",
-  "place": "Ipca",
-  "moment_date": "2017-11-30T00:00:00.000Z",
-  "narrative": "Go to Barcelos",
-  "lat": "41,5317",
-  "lon": "-8,6179",
-  "img": "buffer",
-  "created": "2017-11-30T00:00:00
-    * */
 
     //inserir um momento
     @FormUrlEncoded
