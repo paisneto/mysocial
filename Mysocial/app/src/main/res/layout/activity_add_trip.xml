@@ -245,4 +245,12 @@
         </LinearLayout>
     </ScrollView>
 
+    <Button
+        android:id="@+id/btn_marker_picker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Button"
+        tools:layout_editor_absoluteX="165dp"
+        tools:layout_editor_absoluteY="75dp" />
+
 </android.support.constraint.ConstraintLayout>

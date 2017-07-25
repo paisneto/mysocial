@@ -58,10 +58,10 @@ public class MomentsAdapter extends ArrayAdapter<EntryDetailsMoment> {
 
         tv_title = (TextView)convertView.findViewById(R.id.tv_title);
         img_avatar = (ImageView)convertView.findViewById(R.id.img_avatar);
-        //tv_country = (TextView)convertView.findViewById(R.id.tv_country);
+        tv_country = (TextView)convertView.findViewById(R.id.tv_country);
 
         tv_title.setText(value.getTitle());
-        //tv_country.setText(value.getCountry());
+        tv_country.setText(value.getPlace());
 
         if (value.getOriginalname().isEmpty()) img_avatar.setImageResource(R.drawable.avatar_anon);
         else new Utils.DownloadImageTask((ImageView) convertView.findViewById(R.id.img_avatar)).execute(MysocialEndpoints.MEDIA_URL + value.getOriginalname());

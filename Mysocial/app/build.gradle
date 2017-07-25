@@ -37,5 +37,7 @@ dependencies {
     compile 'javax.annotation:javax.annotation-api:1.2'
     compile 'de.hdodenhof:circleimageview:2.1.0'
     compile 'com.facebook.android:facebook-android-sdk:[4,5)'
-
+    compile 'com.google.android.gms:play-services-places:10.2.6'
+    compile 'com.google.android.gms:play-services-location:10.2.6'
 }
+//apply plugin: 'com.google.gms.google-services'

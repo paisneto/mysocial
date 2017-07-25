@@ -3,13 +3,15 @@ package com.example.nunocoelho.mysocial.trip;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.location.Address;
+import android.location.Geocoder;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
@@ -18,7 +20,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -26,6 +27,10 @@ import com.example.nunocoelho.mysocial.LoginActivity;
 import com.example.nunocoelho.mysocial.R;
 import com.example.nunocoelho.mysocial.moment.AddMommentActivity;
 import com.example.nunocoelho.mysocial.mysocialapi.MysocialEndpoints;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlacePicker;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -34,6 +39,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Calendar;
+import java.util.List;
+import java.util.Locale;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -53,6 +60,7 @@ public class AddTripActivity extends AppCompatActivity {
     private static final String IMAGE_DIRECTORY = "/demonuts";
     private int GALLERY = 1, CAMERA = 2;
     private Bitmap imageBitmap;
+    static final int MARKER_PICKER_REQUEST = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,6 +118,20 @@ public class AddTripActivity extends AppCompatActivity {
                 }
             }
             });
+
+        Button markerPickerButton = (Button) findViewById(R.id.btn_marker_picker);
+        markerPickerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+                try {
+                    startActivityForResult(builder.build(AddTripActivity.this), MARKER_PICKER_REQUEST);
+                } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
+                    Toast.makeText(getApplicationContext(),"There was a problem with your Google Services", Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                }
+            }
+        });
         //
         //botão para ir para a addmommentactivity
         /*btn_addmomment = (Button)findViewById(R.id.btn_addmomment);
@@ -136,6 +158,9 @@ public class AddTripActivity extends AppCompatActivity {
             }
         });*/
     }
+
+
+
     //metodo para ir para a ListTripActivity
     protected void goListTrip(){
         Intent intent = new Intent(this, ListTripActivity.class);
@@ -190,6 +215,31 @@ public class AddTripActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == this.RESULT_CANCELED) {
             return;
+        }  if (requestCode == MARKER_PICKER_REQUEST && resultCode == RESULT_OK) {
+            Place place = PlacePicker.getPlace(getApplicationContext(), data);
+            //String toastMsg = String.format("Place: %s", place.getName());
+            //Toast.makeText(this, toastMsg, Toast.LENGTH_LONG).show();
+            //TextView countryEditText = (TextView)findViewById(R.id.countryEditText);
+            //TextView placeTitleEditText = (TextView)findViewById(R.id.placeTitleEditText);
+            //TextView latitudeEditText = (TextView)findViewById(R.id.latitudeEditText);
+            //TextView longitudeEditText = (TextView)findViewById(R.id.longitudeEditText);
+
+            Geocoder gcd = new Geocoder(this, Locale.getDefault());
+            List<Address> addresses = null;
+            try {
+                addresses = gcd.getFromLocation(place.getLatLng().latitude, place.getLatLng().longitude, 1);
+                Log.d("geo",addresses.get(0).getCountryName());
+                Log.d("geo",addresses.get(0).getFeatureName());
+                //countryEditText.setText(addresses.get(0).getCountryName());
+                //placeTitleEditText.setText(addresses.get(0).getFeatureName());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            Log.d("geo",Double.toString(place.getLatLng().latitude));
+            Log.d("geo",Double.toString(place.getLatLng().longitude));
+            //latitudeEditText.setText(Double.toString(place.getLatLng().latitude));
+            //longitudeEditText.setText(Double.toString(place.getLatLng().longitude));
         }
         if (requestCode == GALLERY) {
             if (data != null) {
