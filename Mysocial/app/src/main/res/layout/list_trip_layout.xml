@@ -31,6 +31,20 @@
         app:srcCompat="@drawable/ic_add_white_24dp"
         tools:ignore="RtlHardcoded" />
 
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/btn_listtrip_markers"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="90dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginRight="24dp"
+        android:clickable="true"
+        app:backgroundTint="@color/colorPrimary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:srcCompat="@drawable/ic_place_white_24dp"
+        tools:ignore="RtlHardcoded" />
+
     <ListView
         android:id="@+id/lv_trips"
         android:layout_width="0dp"

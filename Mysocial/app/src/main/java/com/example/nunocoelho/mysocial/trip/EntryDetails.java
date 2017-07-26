@@ -29,6 +29,10 @@ public class EntryDetails {
     @SerializedName("date")
     private String date;
 
+    private String lat;
+
+    private String lon;
+
     @SerializedName("originalname")
     private String filename;
 
@@ -48,6 +52,8 @@ public class EntryDetails {
         date="";
         media=null;
         filename="";
+        lat = "";
+        lon = "";
     }
 
     public String getId() {
@@ -95,6 +101,28 @@ public class EntryDetails {
     public void setDate(String date) {
         this.date = date;
     }
+
+
+    public String getLat ()
+    {
+        return lat;
+    }
+
+    public void setLat (String lat)
+    {
+        this.lat = lat;
+    }
+
+    public String getLon ()
+    {
+        return lon;
+    }
+
+    public void setLon (String lon)
+    {
+        this.lon = lon;
+    }
+
 
     public String getFilename() {
         return filename;

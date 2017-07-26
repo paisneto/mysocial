@@ -360,12 +360,9 @@ public class DetailTripActivity extends AppCompatActivity {
 
     //metodo para carregar os moments de uma viagem
     protected void showMoments(){
-        //spinner = (ProgressBar)findViewById(R.id.pb_progressbar);
-        //spinner.setVisibility(ProgressBar.VISIBLE);
-
         MysocialEndpoints api = MysocialEndpoints.retrofit.create(MysocialEndpoints.class);
         Call<AnwserMoment> call = api.getMomentsTrip(
-                _id_trip//"5929dcceef70ac00047d9635"
+                _id_trip
         );
         call.enqueue(new Callback<AnwserMoment>() {
 
