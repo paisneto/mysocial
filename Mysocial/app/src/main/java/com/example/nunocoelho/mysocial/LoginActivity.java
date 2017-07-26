@@ -1,5 +1,6 @@
 package com.example.nunocoelho.mysocial;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -7,8 +8,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import com.example.nunocoelho.mysocial.login.Anwser;
 import com.example.nunocoelho.mysocial.login.Details;
+import com.example.nunocoelho.mysocial.mysocialapi.MysocialEndpoints;
 import com.example.nunocoelho.mysocial.trip.ListTripActivity;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
@@ -25,11 +29,17 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import io.realm.Realm;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class LoginActivity extends AppCompatActivity {
     //declaração das variaveis
     Realm realm = null;
+
+
+
 
     CallbackManager callbackManager;
     private AccessTokenTracker accessTokenTracker;
@@ -54,11 +64,20 @@ public class LoginActivity extends AppCompatActivity {
 
         String logOut = intent.getStringExtra("kill_user");
 
+
         accessTokenTracker = new AccessTokenTracker(){
             @Override
             protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken){
                 if (oldAccessToken!=null){ Log.d("Facebook",oldAccessToken.getToken()); }
-                else { Log.d("Facebook",currentAccessToken.getToken()); }
+                else { Log.d("Facebook",currentAccessToken.getToken());
+
+                    Context context = getApplicationContext();
+                    CharSequence text = "";
+                    int duration = Toast.LENGTH_SHORT;
+
+                    Toast toast = Toast.makeText(context, currentAccessToken.getToken(), duration);
+                    toast.show();
+                }
             }
         };
 
@@ -66,7 +85,12 @@ public class LoginActivity extends AppCompatActivity {
         if (accessToken!=null){
             //esta authenticado
             Log.d("Facebook", "facebook:accesstoken:"+ accessToken.getToken());
+            Context context = getApplicationContext();
+            CharSequence text = "";
+            int duration = Toast.LENGTH_SHORT;
 
+            Toast toast = Toast.makeText(context, accessToken.getToken(), duration);
+            toast.show();
             goValidatUserLoggedActivity();
             //guardar no realm e mostrar a foto do utilizador etc
         }
@@ -85,8 +109,11 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onSuccess(LoginResult loginResult) {
-                Log.d("Facebook",loginResult.getAccessToken().getUserId());
-                Log.d("Facebook",loginResult.getAccessToken().getToken());
+                //Log.d("Facebook",loginResult.getAccessToken().getUserId());
+               // Log.d("Facebook",loginResult.getAccessToken().getToken());
+                user.setOauthID(loginResult.getAccessToken().getUserId());
+                user.setToken(loginResult.getAccessToken().getToken());
+               // getFacebookData(loginResult, newUser);
                 loadFacebookInfo(loginResult, user);
 
 
@@ -102,14 +129,23 @@ public class LoginActivity extends AppCompatActivity {
 
             }
         });
+        //add
+      //  realm = Realm.getDefaultInstance();
 
         accessTokenTracker = new AccessTokenTracker() {
             @Override
             protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken) {
                 //TODO: se estiver a null tenho de limpar do realm o user forcando o logout
-                if (currentAccessToken==null)
-                {
-                    logOutUser();
+                if (currentAccessToken==null){
+                    realm.beginTransaction();
+                    Details user = realm.where(Details.class).findFirst();
+                    if(user != null) {
+                        user.deleteFromRealm();
+                        realm.commitTransaction();
+
+                        //remove
+                        // logOutUser();
+                    }
                 }
             }
         };
@@ -134,9 +170,18 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onCompleted(JSONObject object, GraphResponse response){
                         try{
-                            Log.d("Facebook", response.getJSONObject().getString("email"));
-                            Log.d("Facebook", response.getJSONObject().getString("first_name"));
-                            Log.d("Facebook", response.getJSONObject().getString("last_name"));
+
+                           // Log.d("Facebook", response.getJSONObject().getString("email"));
+                           // Log.d("Facebook", response.getJSONObject().getString("first_name"));
+                           // Log.d("Facebook", response.getJSONObject().getString("last_name"));
+
+                            user.setEmail(response.getJSONObject().getString("email"));
+                            user.setFirstName(response.getJSONObject().getString("first_name"));
+                            user.setLastName(response.getJSONObject().getString("last_name"));
+
+                            getProfilePicture(loginResult, user);
+
+
                             goValidatUserLoggedActivity();
                         } catch (JSONException e)
                         {
@@ -162,8 +207,9 @@ public class LoginActivity extends AppCompatActivity {
                 new GraphRequest.Callback(){
                     public void onCompleted(GraphResponse response){
                         try{
-                            Log.d("Facebook", response.getJSONObject().getJSONObject("data").getString("url"));
-
+                            //Log.d("Facebook", response.getJSONObject().getJSONObject("data").getString("url"));
+                            user.setPhotoUri(response.getJSONObject().getJSONObject("data").getString("url"));
+                            facebookLogin(user);
                             //TODO: Aqui enviar todos dos dados para a API para guardar lá a informação
 
 
@@ -229,6 +275,32 @@ public class LoginActivity extends AppCompatActivity {
         });*/
     }
 
+    //add
+    public void facebookLogin(Details user){
+
+        MysocialEndpoints api = MysocialEndpoints.retrofit.create(MysocialEndpoints.class);
+
+        Call< Details> call = api.facebookLogin(user);
+
+        call.enqueue(new Callback<Details>() {
+            @Override
+            public void onResponse(Call<Details> call, Response<Details> response) {
+                if(response.code() == 200){
+                    Details user = response.body();
+                    saveToRealm(user);
+                  //  setProfile(user);
+                  //  mListenerLogin.onFragmentLogin();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<Details> call, Throwable t) {
+
+            }
+        });
+    }
+
     //metodo chamado para validar user
     protected void goValidatUserLoggedActivity(){
 
@@ -252,8 +324,8 @@ public class LoginActivity extends AppCompatActivity {
 
             if (username != "" && password != "")
             {
-                newUser.username = username;
-                newUser.password = password;
+                newUser.setUsername(username);
+                newUser.setPassword(password);
                 realm.copyToRealm(newUser);
                 realm.commitTransaction();
                 goListTripActivity();
@@ -266,6 +338,13 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+
+    //add
+    private void saveToRealm(Details user){
+        realm.beginTransaction();
+        realm.copyToRealm(user);
+        realm.commitTransaction();
+    }
 
     @Override
     protected void onDestroy() {

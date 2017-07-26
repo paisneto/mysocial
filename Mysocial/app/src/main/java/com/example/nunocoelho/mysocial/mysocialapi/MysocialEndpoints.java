@@ -1,5 +1,6 @@
 package com.example.nunocoelho.mysocial.mysocialapi;
 
+import com.example.nunocoelho.mysocial.login.Details;
 import com.example.nunocoelho.mysocial.moment.AnwserMoment;
 import com.example.nunocoelho.mysocial.moment.EntryDetailsMoment;
 import com.example.nunocoelho.mysocial.trip.Anwser;
@@ -9,6 +10,7 @@ import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -30,6 +32,9 @@ public interface MysocialEndpoints {
     final static String BASE_URL = "https://secret-plains-68464.herokuapp.com/";
     //final static String MEDIA_URL = "https://s3.eu-west-2.amazonaws.com/meimysocial/upload/media/";
     final static String MEDIA_URL = "https://meimysocial.blob.core.windows.net/upload/";
+
+    @POST("register/")
+    Call<Details> facebookLogin(@Body Details user);
 
     //
     @GET("trips/?limit=500&page=1&number=100&sort=-created")//&title={title}")
