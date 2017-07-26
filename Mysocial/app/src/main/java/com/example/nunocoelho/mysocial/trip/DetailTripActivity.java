@@ -398,13 +398,13 @@ public class DetailTripActivity extends AppCompatActivity {
     //metodo para partilhar uma viagem
     protected void shareTrip(){
         MysocialEndpoints api = MysocialEndpoints.retrofit.create(MysocialEndpoints.class);
-        Call<String> call = api.shareTrip(
-                _id_trip, true
+        Call<Anwser> call = api.shareTrip(
+                _id_trip, false
         );
-        call.enqueue(new Callback<String>() {
+        call.enqueue(new Callback<Anwser>() {
 
             @Override
-            public void onResponse(Call<String> call, Response<String> response) {
+            public void onResponse(Call<Anwser> call, Response<Anwser> response) {
                 if(response.code() == 200) {
                     Toast.makeText(DetailTripActivity.this, "Shared to public!", Toast.LENGTH_SHORT).show();
                 } else {
@@ -413,7 +413,7 @@ public class DetailTripActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<String> call, Throwable t) {
+            public void onFailure(Call<Anwser> call, Throwable t) {
                 t.printStackTrace();
             }
         });
@@ -438,7 +438,6 @@ public class DetailTripActivity extends AppCompatActivity {
                 // If we got here, the user's action was not recognized.
 
                 return super.onOptionsItemSelected(item);
-
         }
     }
 

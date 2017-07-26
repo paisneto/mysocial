@@ -14,6 +14,7 @@ import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
@@ -63,10 +64,10 @@ public interface MysocialEndpoints {
             @Field("date") String date
     );
 
-    //inserir uma viagem
+    //partilhar uma viagem
     @FormUrlEncoded
-    @POST("trips/{id}/share/")
-    Call<String> shareTrip(
+    @PUT("trips/{id}/share/")
+    Call<Anwser> shareTrip(
             @Path("id") String id,
             @Field("isprivate") Boolean isprivate
     );
@@ -85,7 +86,7 @@ public interface MysocialEndpoints {
 
     //inserir um momento
     @FormUrlEncoded
-    @POST("moments/moment/")
+    @POST("moments/")
     Call<EntryDetailsMoment> addMomment(
             @Field("title") String title,
             @Field("place") String place,

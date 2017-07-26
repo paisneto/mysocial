@@ -1,10 +1,6 @@
 package com.example.nunocoelho.mysocial.trip;
-import android.graphics.Matrix;
-import android.widget.ImageView;
-
 import com.google.gson.annotations.SerializedName;
 
-import java.nio.Buffer;
 import java.util.List;
 
 /**
@@ -35,6 +31,8 @@ public class EntryDetails {
 
     @SerializedName("originalname")
     private String filename;
+
+    private String isprivate;
 
     @SerializedName("img")
     private List<EntryMediaDetails> media;
@@ -112,6 +110,16 @@ public class EntryDetails {
 
     public List<EntryMediaDetails> getMedia() {
         return media;
+    }
+
+    public String getIsprivate ()
+    {
+        return isprivate;
+    }
+
+    public void setIsprivate (String isprivate)
+    {
+        this.isprivate = isprivate;
     }
 
    //@Override
