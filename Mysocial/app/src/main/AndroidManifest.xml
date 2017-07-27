@@ -56,6 +56,7 @@
         <activity android:name=".trip.DetailTripActivity" />
         <activity android:name=".login.EditUserActivity" />
         <activity android:name=".trip.EditTripActivity" />
+        <activity android:name=".trip.MapsActivity" />
         <activity android:name=".trip.AddTripActivity" />
         <!--
             <activity

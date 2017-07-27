@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.example.nunocoelho.mysocial.R;
 import com.example.nunocoelho.mysocial.adapters.DetailTripAdapter;
+import com.example.nunocoelho.mysocial.helpers.Markers;
 import com.example.nunocoelho.mysocial.helpers.Utils;
 import com.example.nunocoelho.mysocial.mysocialapi.MysocialEndpoints;
 import com.facebook.login.LoginManager;
@@ -38,7 +39,7 @@ public class ListTripActivity extends AppCompatActivity
     //declaração das variaveis
     private static DetailTripAdapter adapter;
     private Button btn_search;
-    private FloatingActionButton btn_addtrip;
+    private FloatingActionButton btn_addtrip, btn_listtrips_marker;
    // private Class lastActivity;
     private TextView tv_title, tv_country,tv_res;
     private ListView lv_trips;
@@ -46,6 +47,8 @@ public class ListTripActivity extends AppCompatActivity
     private ArrayList<EntryDetails> entryDetailsList;
     private ProgressBar spinner;
     public Toolbar toolbar;
+    private ArrayList<Markers> listMarkers = new ArrayList<Markers>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +62,7 @@ public class ListTripActivity extends AppCompatActivity
         tv_title    = (TextView) findViewById(R.id.tv_title);
         tv_country  = (TextView)findViewById(R.id.tv_country);
         btn_addtrip = (FloatingActionButton)findViewById(R.id.btn_addtrip);
+        btn_listtrips_marker = (FloatingActionButton)findViewById(R.id.btn_listtrip_markers);
         //btn_search  = (android.widget.Button)findViewById(R.id.btn_back);
 
         lv_trips    = (ListView) findViewById(R.id.lv_trips);
@@ -77,8 +81,8 @@ public class ListTripActivity extends AppCompatActivity
         });
 
         showTrips();
-       //botao para adicionar uma nova viagem
-       btn_addtrip.setOnClickListener(new View.OnClickListener(
+        //botao para adicionar uma nova viagem
+        btn_addtrip.setOnClickListener(new View.OnClickListener(
         ) {
             @Override
             public void onClick(View v) {
@@ -88,6 +92,13 @@ public class ListTripActivity extends AppCompatActivity
         });
 
 
+
+        btn_listtrips_marker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goDetailTripMapMarkers();
+            }
+        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -123,6 +134,18 @@ public class ListTripActivity extends AppCompatActivity
         intent.putExtra("description", adapter.getItem(i).getDescription());
         startActivity(intent);
     }
+
+    //metodo para ir para a DetailTripActivity
+    protected void goDetailTripMapMarkers() {
+        try {
+            Intent intt = new Intent(this, MapsActivity.class);
+            intt.putExtra("EntryDetailsList", (ArrayList<Markers>) listMarkers);
+            startActivity(intt);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
     //metodo para ir para a AddTripActivity
     protected void goAddTrip(){
         Intent intent = new Intent(this, AddTripActivity.class);
@@ -148,12 +171,17 @@ public class ListTripActivity extends AppCompatActivity
             @Override
             public void onResponse(Call<Anwser> call, Response<Anwser> response) {
                 if(response.code() == 200) {
-                    Anwser resp = response.body();
-                    for(EntryDetails e : resp.getEntradas()) {
-                        entryDetailsList.add(e);
+                    try {
+                        Anwser resp = response.body();
+                        for(EntryDetails e : resp.getEntradas()) {
+                            entryDetailsList.add(e);
+                            listMarkers.add(new Markers(Double.valueOf(e.getLat()).doubleValue(), Double.valueOf(e.getLon()).doubleValue(), e.getCity()));
+                        }
+                        adapter.notifyDataSetChanged();
+                        adapter.notifyDataSetInvalidated();
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                    adapter.notifyDataSetChanged();
-                    adapter.notifyDataSetInvalidated();
                     progress_spinner.dismiss();
                 }
             }
