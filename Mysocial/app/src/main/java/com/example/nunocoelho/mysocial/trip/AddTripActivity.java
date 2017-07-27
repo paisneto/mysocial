@@ -215,7 +215,7 @@ public class AddTripActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == this.RESULT_CANCELED) {
             return;
-        }  if (requestCode == MARKER_PICKER_REQUEST && resultCode == RESULT_OK) {
+        } else if (requestCode == MARKER_PICKER_REQUEST && resultCode == RESULT_OK) {
             Place place = PlacePicker.getPlace(getApplicationContext(), data);
             //String toastMsg = String.format("Place: %s", place.getName());
             //Toast.makeText(this, toastMsg, Toast.LENGTH_LONG).show();
@@ -240,8 +240,7 @@ public class AddTripActivity extends AppCompatActivity {
             Log.d("geo",Double.toString(place.getLatLng().longitude));
             //latitudeEditText.setText(Double.toString(place.getLatLng().latitude));
             //longitudeEditText.setText(Double.toString(place.getLatLng().longitude));
-        }
-        if (requestCode == GALLERY) {
+        } else if (requestCode == GALLERY) {
             if (data != null) {
                 Uri contentURI = data.getData();
                 try {
