@@ -1,5 +1,6 @@
 package com.example.nunocoelho.mysocial.login;
 
+import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.Index;
 import io.realm.annotations.PrimaryKey;
@@ -28,6 +29,16 @@ public class Details extends RealmObject {
     private String gender;
     private String token;
     private String photoUri;
+
+    public RealmList<Anwser> getUsers() {
+        return users;
+    }
+
+    public void setUsers(RealmList<Anwser> users) {
+        this.users = users;
+    }
+
+    private RealmList<Anwser> users;
 
     public String getUsername() {
         return username;
