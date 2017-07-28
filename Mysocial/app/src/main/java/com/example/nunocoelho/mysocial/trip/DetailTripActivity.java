@@ -55,9 +55,9 @@ import retrofit2.Response;
 public class DetailTripActivity extends AppCompatActivity {
 
     private static MomentsAdapter adapter;
-    private Button btn_back;
+    private Button btn_back, btn_class_1, btn_class_2, btn_class_3;
     private String _id_trip, strFilePath;
-    private FloatingActionButton btn_addmomment, btn_share;
+    private FloatingActionButton btn_addmomment;
     private ImageView iv_image_selected;
     private ListView lv_momments;
     private TextView tv_titledetail, tv_countrydetail, tv_citydetail, tv_datedetail, tv_descriptiondetail;
@@ -81,7 +81,6 @@ public class DetailTripActivity extends AppCompatActivity {
         //addListenerOnButton();
 
         btn_addmomment = (FloatingActionButton) findViewById(R.id.btn_addmomment);
-        btn_share = (FloatingActionButton) findViewById(R.id.btn_share);
         //btn_back = (Button) findViewById(R.id.btn_back);
         //fab_search = (FloatingActionButton)findViewById(R.id.fab_search);
         tv_titledetail = (TextView)findViewById(R.id.tv_titledetail);
@@ -99,6 +98,10 @@ public class DetailTripActivity extends AppCompatActivity {
         tv_descriptiondetail.setText(intent.getStringExtra("description"));
 
         lv_momments    = (ListView) findViewById(R.id.lv_momments);
+
+        btn_class_1 = (Button) findViewById(R.id.btn_class_1);
+        btn_class_2 = (Button) findViewById(R.id.btn_class_2);
+        btn_class_3 = (Button) findViewById(R.id.btn_class_3);
 
         entryDetailsMomentList = new ArrayList<>();
 
@@ -123,10 +126,24 @@ public class DetailTripActivity extends AppCompatActivity {
             }
         });
 
-        btn_share.setOnClickListener(new View.OnClickListener() {
+        btn_class_1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                shareTrip();
+                Toast.makeText(DetailTripActivity.this, "Class 1!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        btn_class_2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(DetailTripActivity.this, "Class 2!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        btn_class_3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(DetailTripActivity.this, "Class 3!", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -392,6 +409,39 @@ public class DetailTripActivity extends AppCompatActivity {
         });
     }
 
+    protected void classifMoments(){
+        MysocialEndpoints api = MysocialEndpoints.retrofit.create(MysocialEndpoints.class);
+        Call<AnwserMoment> call = api.getMomentsTrip(
+                _id_trip
+        );
+        call.enqueue(new Callback<AnwserMoment>() {
+
+            @Override
+            public void onResponse(Call<AnwserMoment> call, Response<AnwserMoment> response) {
+                if(response.code() == 200) {
+                    AnwserMoment resp = response.body();
+                    for(EntryDetailsMoment e : resp.getEntradas()) {
+                        entryDetailsMomentList.add(e);
+                    }
+                    adapter.notifyDataSetChanged();
+                    adapter.notifyDataSetInvalidated();
+                } else {
+                    Context context = getApplicationContext();
+                    CharSequence text = "Else DetailTripActivity toast!";
+                    int duration = Toast.LENGTH_LONG;
+
+                    Toast toast = Toast.makeText(context, text, duration);
+                    toast.show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<AnwserMoment> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
+    }
+
     //metodo para partilhar uma viagem
     protected void shareTrip(){
         MysocialEndpoints api = MysocialEndpoints.retrofit.create(MysocialEndpoints.class);
@@ -430,7 +480,13 @@ public class DetailTripActivity extends AppCompatActivity {
             case R.id.logout:
                 intent = new Intent(this, LoginActivity.class);
                 startActivity(intent);
-
+            case R.id.action_favorite:
+                try {
+                    shareTrip();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return true;
             default:
                 // If we got here, the user's action was not recognized.
 
