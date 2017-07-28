@@ -173,7 +173,7 @@ public class DetailMomentActivity extends AppCompatActivity {
                 // User chose the "Settings" item, show the app settings UI...
                 return true;
 
-            case R.id.action_favorite:
+            case R.id.action_markers:
                 // User chose the "Favorite" action, mark the current item
                 // as a favorite...
                 return true;

@@ -62,7 +62,6 @@ public class ListTripActivity extends AppCompatActivity
         tv_title    = (TextView) findViewById(R.id.tv_title);
         tv_country  = (TextView)findViewById(R.id.tv_country);
         btn_addtrip = (FloatingActionButton)findViewById(R.id.btn_addtrip);
-        btn_listtrips_marker = (FloatingActionButton)findViewById(R.id.btn_listtrip_markers);
         //btn_search  = (android.widget.Button)findViewById(R.id.btn_back);
 
         lv_trips    = (ListView) findViewById(R.id.lv_trips);
@@ -88,15 +87,6 @@ public class ListTripActivity extends AppCompatActivity
             public void onClick(View v) {
                 goAddTrip();
 
-            }
-        });
-
-
-
-        btn_listtrips_marker.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goDetailTripMapMarkers();
             }
         });
 
@@ -135,17 +125,6 @@ public class ListTripActivity extends AppCompatActivity
         startActivity(intent);
     }
 
-    //metodo para ir para a DetailTripActivity
-    protected void goDetailTripMapMarkers() {
-        try {
-            Intent intt = new Intent(this, MapsActivity.class);
-            intt.putExtra("EntryDetailsList", (ArrayList<Markers>) listMarkers);
-            startActivity(intt);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
     //metodo para ir para a AddTripActivity
     protected void goAddTrip(){
         Intent intent = new Intent(this, AddTripActivity.class);
@@ -251,14 +230,35 @@ public class ListTripActivity extends AppCompatActivity
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        //int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        /*if (id == R.id.action_settings) {
             return true;
+        }*/
+        Intent intent;
+        switch (item.getItemId()) {
+           case R.id.action_settings:
+               intent = new Intent(this, SearchTripActivity.class);
+               startActivity(intent);
+               return true;
+            case R.id.action_markers:
+                try {
+                    Intent intt = new Intent(this, MapsActivity.class);
+                    intt.putExtra("EntryDetailsList", (ArrayList<Markers>) listMarkers);
+                    startActivity(intt);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return true;
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
         }
 
-        return super.onOptionsItemSelected(item);
+
+        //return super.onOptionsItemSelected(item);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
