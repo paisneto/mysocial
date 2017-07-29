@@ -30,6 +30,16 @@ public class Details extends RealmObject {
     private String token;
     private String photoUri;
 
+    public Boolean getIsauthenticated() {
+        return isauthenticated;
+    }
+
+    public void setIsauthenticated(Boolean isauthenticated) {
+        this.isauthenticated = isauthenticated;
+    }
+
+    private Boolean isauthenticated;
+
     public RealmList<Anwser> getUsers() {
         return users;
     }

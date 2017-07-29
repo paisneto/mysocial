@@ -29,12 +29,49 @@ public interface MysocialEndpoints {
 
     //pesquisar viagem por id
     final static String BASE_API_URL = "https://secret-plains-68464.herokuapp.com/api/v1/";
+    final static String BASE_API_URL_V2 = "https://secret-plains-68464.herokuapp.com/api/v2/";
     final static String BASE_URL = "https://secret-plains-68464.herokuapp.com/";
     //final static String MEDIA_URL = "https://s3.eu-west-2.amazonaws.com/meimysocial/upload/media/";
     final static String MEDIA_URL = "https://meimysocial.blob.core.windows.net/upload/";
 
-    @POST("register/")
-    Call<Details> facebookLogin(@Body Details user);
+    //get user by email
+    @GET("users/{email}")
+    Call<Details> getUser(
+            @Path("email") String email
+        );
+
+    //update user email
+    @FormUrlEncoded
+    @PUT("users/{email}")
+    Call<Details>updateUser(
+            @Path("email") String email,
+            @Field("oauthID") String oauthID,
+            @Field("token") String token,
+            @Field("name") String name,
+            @Field("first_name") String first_name,
+            @Field("last_name") String last_name,
+            @Field("username") String username,
+            @Field("gender") String gender,
+            @Field("isauthenticated") Boolean isauthenticated
+    );
+
+
+    // insert user
+    @FormUrlEncoded
+    @POST("users/")
+    Call<Details> insertUser(
+           @Field("email") String email,
+           @Field("oauthID") String oauthID,
+           @Field("token") String token,
+           @Field("name") String name,
+           @Field("first_name") String first_name,
+           @Field("last_name") String last_name,
+           @Field("username") String username,
+           @Field("gender") String gender,
+           @Field("isauthenticated") Boolean isauthenticated
+
+    );
+
 
     //
     @GET("trips/?limit=500&page=1&number=100&sort=-created")//&title={title}")
@@ -112,5 +149,12 @@ public interface MysocialEndpoints {
             .baseUrl(BASE_API_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build();
+
+    final static Retrofit retrofit_2 = new Retrofit.Builder()
+            .baseUrl(BASE_API_URL_V2)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build();
+
+
 
 }
