@@ -250,7 +250,8 @@
                     android:layout_weight="1"
                     android:ems="10"
                     android:hint="@string/date"
-                    android:inputType="date"
+                    android:inputType="datetime"
+                    android:focusable="false"
                     android:textSize="14sp"
                     tools:ignore="InefficientWeight,NestedWeights" />
 
