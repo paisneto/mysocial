@@ -48,7 +48,7 @@ public class EditTripActivity extends AppCompatActivity {
 
         btn_addmomment = (Button) findViewById(R.id.btn_addmomment);
         btn_delete     = (Button) findViewById(R.id.btn_delete);
-        btn_back       = (Button) findViewById(R.id.btn_back);
+        //btn_back       = (Button) findViewById(R.id.btn_back);
         btn_save       = (Button) findViewById(R.id.btn_save);
         iv_phototrip   = (ImageView) findViewById(R.id.iv_fototrip);
         et_title       = (EditText) findViewById(R.id.et_title);

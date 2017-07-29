@@ -28,6 +28,7 @@ import android.widget.Toast;
 import com.example.nunocoelho.mysocial.LoginActivity;
 import com.example.nunocoelho.mysocial.R;
 import com.example.nunocoelho.mysocial.adapters.MomentsAdapter;
+import com.example.nunocoelho.mysocial.helpers.Utils;
 import com.example.nunocoelho.mysocial.moment.AddMommentActivity;
 import com.example.nunocoelho.mysocial.moment.AnwserMoment;
 import com.example.nunocoelho.mysocial.moment.DetailMomentActivity;
@@ -41,6 +42,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.UUID;
@@ -55,12 +57,12 @@ import retrofit2.Response;
 public class DetailTripActivity extends AppCompatActivity {
 
     private static MomentsAdapter adapter;
-    private Button btn_back, btn_class_1, btn_class_2, btn_class_3;
+    private Button btn_back;
     private String _id_trip, strFilePath;
     private FloatingActionButton btn_addmomment;
-    private ImageView iv_image_selected;
+    private ImageView iv_image_selected, img_trip_default;
     private ListView lv_momments;
-    private TextView tv_titledetail, tv_countrydetail, tv_citydetail, tv_datedetail, tv_descriptiondetail;
+    private TextView tv_title, tv_address, tv_date, tv_description;
     private ArrayList<EntryDetailsMoment> entryDetailsMomentList;
     private static final String IMAGE_DIRECTORY = "/MEIMySocialUploads";
     private int GALLERY = 1, CAMERA = 2;
@@ -81,27 +83,32 @@ public class DetailTripActivity extends AppCompatActivity {
         //addListenerOnButton();
 
         btn_addmomment = (FloatingActionButton) findViewById(R.id.btn_addmomment);
-        //btn_back = (Button) findViewById(R.id.btn_back);
-        //fab_search = (FloatingActionButton)findViewById(R.id.fab_search);
-        tv_titledetail = (TextView)findViewById(R.id.tv_titledetail);
-        tv_countrydetail = (TextView)findViewById(R.id.tv_countrydetail);
-        tv_citydetail = (TextView) findViewById(R.id.tv_citydetail);
-        tv_datedetail = (TextView) findViewById(R.id.tv_datedetail);
-        tv_descriptiondetail = (TextView) findViewById(R.id.tv_descriptiondetail);
-        //iv_image_selected = (ImageView) findViewById(R.id.iv_image_selected);
+        tv_title = (TextView)findViewById(R.id.tv_title);
+        tv_address = (TextView)findViewById(R.id.tv_address);
+        tv_date = (TextView) findViewById(R.id.tv_date);
+        tv_description = (TextView) findViewById(R.id.tv_description);
+        img_trip_default = (ImageView) findViewById(R.id.img_trip_default);
 
         _id_trip = intent.getStringExtra("_id");
-        tv_titledetail.setText(intent.getStringExtra("title"));
-        tv_countrydetail.setText(intent.getStringExtra("country"));
-        tv_citydetail.setText(intent.getStringExtra("city"));
-        tv_datedetail.setText(intent.getStringExtra("date"));
-        tv_descriptiondetail.setText(intent.getStringExtra("description"));
+        tv_title.setText(intent.getStringExtra("title"));
+        try {
+            String city = (String.valueOf(intent.getStringExtra("city") == null ? "" : ", " + String.valueOf(intent.getStringExtra("city"))));
+            String adress = String.valueOf(intent.getStringExtra("country"))  + city;
+            tv_address.setText(adress);
+
+            String DATE_FORMAT_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+            String reformattedStr = new SimpleDateFormat("dd MMM yyyy").format(new SimpleDateFormat(DATE_FORMAT_PATTERN).parse(intent.getStringExtra("date")));
+            tv_date.setText(reformattedStr);    // format output
+
+           // String adress = intent.getStringExtra("country").concat(", ").concat(intent.getStringExtra("city"));
+            setImageGallery(intent.getStringExtra("originalname"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        //tv_date.setText(intent.getStringExtra("date"));
+        tv_description.setText(intent.getStringExtra("description"));
 
         lv_momments    = (ListView) findViewById(R.id.lv_momments);
-
-        btn_class_1 = (Button) findViewById(R.id.btn_class_1);
-        btn_class_2 = (Button) findViewById(R.id.btn_class_2);
-        btn_class_3 = (Button) findViewById(R.id.btn_class_3);
 
         entryDetailsMomentList = new ArrayList<>();
 
@@ -126,27 +133,6 @@ public class DetailTripActivity extends AppCompatActivity {
             }
         });
 
-        btn_class_1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(DetailTripActivity.this, "Class 1!", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        btn_class_2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(DetailTripActivity.this, "Class 2!", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        btn_class_3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(DetailTripActivity.this, "Class 3!", Toast.LENGTH_SHORT).show();
-            }
-        });
-
         //para voltar a ListTripActivity
 
        /* btn_back.setOnClickListener(new View.OnClickListener() {
@@ -156,6 +142,36 @@ public class DetailTripActivity extends AppCompatActivity {
             }
         });*/
     }
+
+    private void setImageGallery(String imgOriginalName) {
+
+        if (imgOriginalName.isEmpty()) img_trip_default.setImageResource(R.drawable.logo);
+        else new Utils.DownloadImageTask((ImageView) img_trip_default.findViewById(R.id.img_trip_default)).execute(MysocialEndpoints.MEDIA_URL + imgOriginalName);
+        //List<Images> images
+        // add optional image into list
+        /*List<Images> new_images = new ArrayList<>();
+        final ArrayList<String> new_images_str = new ArrayList<>();
+        new_images.add(new Images(place.place_id, place.image));
+        new_images.addAll(images);
+        for (Images img : new_images) {
+            new_images_str.add(img.name);
+        }
+
+        RecyclerView galleryRecycler = (RecyclerView) findViewById(R.id.galleryRecycler);
+        galleryRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        AdapterImageList adapter = new AdapterImageList(new_images);
+        galleryRecycler.setAdapter(adapter);
+        adapter.setOnItemClickListener(new AdapterImageList.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, String viewModel, int pos) {
+                Intent i = new Intent(ActivityPlaceDetail.this, ActivityFullScreenImage.class);
+                i.putExtra(ActivityFullScreenImage.EXTRA_POS, pos);
+                i.putStringArrayListExtra(ActivityFullScreenImage.EXTRA_IMGS, new_images_str);
+                startActivity(i);
+            }
+        });*/
+    }
+
     //metodo para voltar para a ListTripActivity
     protected void goListTrip(){
         Intent intent = new Intent(this, ListTripActivity.class);
@@ -167,25 +183,6 @@ public class DetailTripActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-//    public void addListenerOnButton() {
-//
-//        ImageButton imageButton = (ImageButton) findViewById(R.id.iv_fototrip);
-//
-//        imageButton.setOnClickListener(new View.OnClickListener() {
-//
-//            @Override
-//            public void onClick(View arg0) {
-//
-//                showPictureDialog();
-//
-//                Toast.makeText(DetailTripActivity.this,
-//                        "ImageButton is clicked!", Toast.LENGTH_SHORT).show();
-//
-//            }
-//
-//        });
-//
-//    }
 
     //inserir imagem da galeria ou tirando uma foto
     private void showPictureDialog(){
@@ -357,15 +354,20 @@ public class DetailTripActivity extends AppCompatActivity {
 
     //metodo para ir para a DetailTripActivity
     protected void goDetailMoment(int i) {
-        Intent intent = new Intent(this, DetailMomentActivity.class);
-        intent.putExtra("_id", adapter.getItem(i).getId());
-        intent.putExtra("title", adapter.getItem(i).getTitle());
-        intent.putExtra("place", adapter.getItem(i).getPlace());
-        intent.putExtra("moment_date", adapter.getItem(i).getMomentDate());
-        intent.putExtra("narrative", adapter.getItem(i).getNarrative());
-        intent.putExtra("lat", adapter.getItem(i).getLat());
-        intent.putExtra("lon", adapter.getItem(i).getLon());
-        startActivity(intent);
+        try {
+            Intent intent = new Intent(this, DetailMomentActivity.class);
+            intent.putExtra("_id", adapter.getItem(i).getId());
+            intent.putExtra("title", adapter.getItem(i).getTitle());
+            intent.putExtra("place", adapter.getItem(i).getPlace());
+            intent.putExtra("moment_date", adapter.getItem(i).getMomentDate());
+            intent.putExtra("narrative", adapter.getItem(i).getNarrative());
+            intent.putExtra("trip", adapter.getItem(i).getTrip());
+            intent.putExtra("lat", adapter.getItem(i).getLat());
+            intent.putExtra("lon", adapter.getItem(i).getLon());
+            startActivity(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     //metodo para chamar a activity para editar a trip
@@ -377,39 +379,6 @@ public class DetailTripActivity extends AppCompatActivity {
 
     //metodo para carregar os moments de uma viagem
     protected void showMoments(){
-        MysocialEndpoints api = MysocialEndpoints.retrofit.create(MysocialEndpoints.class);
-        Call<AnwserMoment> call = api.getMomentsTrip(
-                _id_trip
-        );
-        call.enqueue(new Callback<AnwserMoment>() {
-
-            @Override
-            public void onResponse(Call<AnwserMoment> call, Response<AnwserMoment> response) {
-                if(response.code() == 200) {
-                    AnwserMoment resp = response.body();
-                    for(EntryDetailsMoment e : resp.getEntradas()) {
-                        entryDetailsMomentList.add(e);
-                    }
-                    adapter.notifyDataSetChanged();
-                    adapter.notifyDataSetInvalidated();
-                } else {
-                    Context context = getApplicationContext();
-                    CharSequence text = "Else DetailTripActivity toast!";
-                    int duration = Toast.LENGTH_LONG;
-
-                    Toast toast = Toast.makeText(context, text, duration);
-                    toast.show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<AnwserMoment> call, Throwable t) {
-                t.printStackTrace();
-            }
-        });
-    }
-
-    protected void classifMoments(){
         MysocialEndpoints api = MysocialEndpoints.retrofit.create(MysocialEndpoints.class);
         Call<AnwserMoment> call = api.getMomentsTrip(
                 _id_trip

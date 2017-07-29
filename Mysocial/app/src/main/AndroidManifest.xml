@@ -65,6 +65,7 @@
         -->
         <activity android:name=".moment.AddMommentActivity" />
         <activity android:name=".moment.EditMommentActivity" />
+        <activity android:name=".moment.DetailMomentActivity" />
         <activity android:name=".trip.SearchTripActivity" />
         <activity android:name=".camera.CameraActivity"></activity>
     </application>

@@ -85,20 +85,13 @@ public interface MysocialEndpoints {
     );
 
     @FormUrlEncoded
-    @PUT("/api/v1/moments/{id}/classifications/")
+    @PUT("moments/{id}/classifications/")
     Call<AnwserMoment> getClassifMoments(
             @Path("id") String id,
             @Field("value") Number value,
             @Field("postedByEmail") String postedByEmail,
             @Field("postedByName") String postedByName
     );
-
-    /*method: 'PUT',
-    url: '/api/v1/moments/'+ id +'/classifications/',
-    data:{ value: _value,
-            postedByEmail: $scope.myAuthUserEmail ,
-            postedByName:  $scope.myAuthUserName
-        }*/
 
     //inserir um momento
     @FormUrlEncoded

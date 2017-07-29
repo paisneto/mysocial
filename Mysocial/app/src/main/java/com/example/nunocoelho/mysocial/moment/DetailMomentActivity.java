@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,9 +31,9 @@ import retrofit2.Response;
 public class DetailMomentActivity extends AppCompatActivity {
 
     private static MomentsAdapter adapter;
-    private Button btn_back;
-    private String _id_trip;
-    private FloatingActionButton btn_addmomment;
+    private Button btn_back, btn_class_1, btn_class_2, btn_class_3;
+    private String _id_moment;
+    private FloatingActionButton btn_editmomment;
     private ListView lv_momments;
     private TextView tv_titledetail, tv_countrydetail, tv_citydetail, tv_datedetail, tv_descriptiondetail;
     private ArrayList<EntryDetailsMoment> entryDetailsMomentList;
@@ -40,11 +41,17 @@ public class DetailMomentActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detail_trip);
+        setContentView(R.layout.activity_detail_moment);
         final Intent intent = getIntent();
 
-        btn_addmomment = (FloatingActionButton) findViewById(R.id.btn_addmomment);
-        btn_back = (Button) findViewById(R.id.btn_back);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setTitle("Detail Moment");
+
+        btn_editmomment = (FloatingActionButton) findViewById(R.id.btn_editmomment);
+        //btn_back = (Button) findViewById(R.id.btn_back);
         //fab_search = (FloatingActionButton)findViewById(R.id.fab_search);
         tv_titledetail = (TextView)findViewById(R.id.tv_titledetail);
         tv_countrydetail = (TextView)findViewById(R.id.tv_countrydetail);
@@ -52,12 +59,16 @@ public class DetailMomentActivity extends AppCompatActivity {
         tv_datedetail = (TextView) findViewById(R.id.tv_datedetail);
         tv_descriptiondetail = (TextView) findViewById(R.id.tv_descriptiondetail);
 
-        _id_trip = intent.getStringExtra("_id");
+        _id_moment = intent.getStringExtra("_id");
         tv_titledetail.setText(intent.getStringExtra("title"));
         tv_countrydetail.setText(intent.getStringExtra("country"));
         tv_citydetail.setText(intent.getStringExtra("city"));
         tv_datedetail.setText(intent.getStringExtra("date"));
         tv_descriptiondetail.setText(intent.getStringExtra("description"));
+
+        btn_class_1 = (Button) findViewById(R.id.btn_class_1);
+        btn_class_2 = (Button) findViewById(R.id.btn_class_2);
+        btn_class_3 = (Button) findViewById(R.id.btn_class_3);
 
         lv_momments    = (ListView) findViewById(R.id.lv_momments);
 
@@ -77,18 +88,34 @@ public class DetailMomentActivity extends AppCompatActivity {
         });
 
         //para editar a trip
-        btn_addmomment.setOnClickListener(new View.OnClickListener() {
+        btn_editmomment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 goAddMoment(intent);
             }
         });
-        //para voltar a ListTripActivity
 
-        btn_back.setOnClickListener(new View.OnClickListener() {
+        btn_class_1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goListTrip();
+                Toast.makeText(DetailMomentActivity.this, "Já fui muito feliz aqui!", Toast.LENGTH_SHORT).show();
+                classifMoments(1);
+            }
+        });
+
+        btn_class_2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(DetailMomentActivity.this, "Nunca tinha experimentado, estou maravilhado!", Toast.LENGTH_SHORT).show();
+                classifMoments(2);
+            }
+        });
+
+        btn_class_3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(DetailMomentActivity.this, "Esta vai direto para minha bucket list!", Toast.LENGTH_SHORT).show();
+                classifMoments(3);
             }
         });
     }
@@ -126,9 +153,7 @@ public class DetailMomentActivity extends AppCompatActivity {
     //metodo para carregar os moments de uma viagem
     protected void showMoments(){
         MysocialEndpoints api = MysocialEndpoints.retrofit.create(MysocialEndpoints.class);
-        Call<AnwserMoment> call = api.getMomentsTrip(
-                _id_trip//"5929dcceef70ac00047d9635"
-        );
+        Call<AnwserMoment> call = api.getMomentsTrip(_id_moment);
         call.enqueue(new Callback<AnwserMoment>() {
 
             @Override
@@ -140,9 +165,31 @@ public class DetailMomentActivity extends AppCompatActivity {
                     }
                     adapter.notifyDataSetChanged();
                     adapter.notifyDataSetInvalidated();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<AnwserMoment> call, Throwable t) {
+                t.printStackTrace();
+                //spinner.setVisibility(View.GONE);
+            }
+        });
+    }
+
+    protected void classifMoments(final int value){
+        MysocialEndpoints api = MysocialEndpoints.retrofit.create(MysocialEndpoints.class);
+        Call<AnwserMoment> call = api.getClassifMoments(
+                _id_moment, value, "ernestonet@msn.com", "Ernesto Casanova"
+        );
+        call.enqueue(new Callback<AnwserMoment>() {
+
+            @Override
+            public void onResponse(Call<AnwserMoment> call, Response<AnwserMoment> response) {
+                if(response.code() == 200) {
+                    Toast.makeText(DetailMomentActivity.this, "Classification Saved! - " + value, Toast.LENGTH_SHORT).show();
                 } else {
                     Context context = getApplicationContext();
-                    CharSequence text = "Else DetailMomentActivity toast!";
+                    CharSequence text = "Else DetailTripActivity toast!";
                     int duration = Toast.LENGTH_LONG;
 
                     Toast toast = Toast.makeText(context, text, duration);
@@ -153,7 +200,6 @@ public class DetailMomentActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<AnwserMoment> call, Throwable t) {
                 t.printStackTrace();
-                //spinner.setVisibility(View.GONE);
             }
         });
     }
@@ -190,4 +236,9 @@ public class DetailMomentActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
 }

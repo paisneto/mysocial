@@ -119,9 +119,10 @@ public class ListTripActivity extends AppCompatActivity
         intent.putExtra("_id", adapter.getItem(i).getId());
         intent.putExtra("title", adapter.getItem(i).getTitle());
         intent.putExtra("country", adapter.getItem(i).getCountry());
-        intent.putExtra("country", adapter.getItem(i).getCountry());
+        intent.putExtra("city", adapter.getItem(i).getCity());
         intent.putExtra("date", adapter.getItem(i).getDate());
         intent.putExtra("description", adapter.getItem(i).getDescription());
+        intent.putExtra("originalname", adapter.getItem(i).getFilename());
         startActivity(intent);
     }
 
@@ -177,36 +178,6 @@ public class ListTripActivity extends AppCompatActivity
 
     }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.layout_search, menu);
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        Intent intent;
-//        switch (item.getItemId()) {
-//           // case R.id.action_settings:
-//                // User chose the "Settings" item, show the app settings UI...
-//           //     return true;
-//
-//            case R.id.action_search:
-//                intent = new Intent(this, SearchTripActivity.class);
-//                startActivity(intent);
-//                return true;
-//            case R.id.logout:
-//                intent = new Intent(this, LoginActivity.class);
-//                intent.putExtra("kill_user", "yes");
-//                startActivity(intent);
-//            default:
-//                // If we got here, the user's action was not recognized.
-//                // Invoke the superclass to handle it.
-//                return super.onOptionsItemSelected(item);
-//
-//        }
-//    }
 
     @Override
     public void onBackPressed() {

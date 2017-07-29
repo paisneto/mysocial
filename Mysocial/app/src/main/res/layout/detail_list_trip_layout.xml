@@ -13,13 +13,6 @@
         android:layout_margin="8dp"
         android:background="@drawable/circle_drawable">
 
-        <!--<ImageView
-            android:id="@+id/img_avatar"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentLeft="true"
-            android:scaleType="fitCenter"/>-->
-
         <de.hdodenhof.circleimageview.CircleImageView
             xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/img_avatar"

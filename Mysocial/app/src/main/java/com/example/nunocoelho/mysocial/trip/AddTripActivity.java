@@ -21,6 +21,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.nunocoelho.mysocial.LoginActivity;
@@ -55,12 +56,11 @@ public class AddTripActivity extends AppCompatActivity {
     private Button btn_save, btn_addmomment;
     private Button btn_camera, btn_back;
     private EditText et_title, et_country,et_city,et_description,et_date;
-    private ImageView iv_phototrip;
+    private ImageView iv_add_image_trip;
     private String strTitle, strCountry, strCity, strDescription, strDate, strFilePath;
     private static final String IMAGE_DIRECTORY = "/demonuts";
-    private int GALLERY = 1, CAMERA = 2;
+    private int GALLERY = 1, CAMERA = 2, MARKER_PICKER_REQUEST = 3;
     private Bitmap imageBitmap;
-    static final int MARKER_PICKER_REQUEST = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +77,7 @@ public class AddTripActivity extends AppCompatActivity {
         //btn_back       = (Button) findViewById(R.id.btn_back);
         btn_save       = (Button) findViewById(R.id.btn_save);
         //btn_camera     = (ImageButton) findViewById(R.id.btn_camera);
-        iv_phototrip   = (ImageView) findViewById(R.id.iv_fototrip);
+        iv_add_image_trip   = (ImageView) findViewById(R.id.iv_add_image_trip);
 
         et_title       = (EditText) findViewById(R.id.et_title);
         et_country     = (EditText)findViewById(R.id.et_country);
@@ -108,6 +108,7 @@ public class AddTripActivity extends AppCompatActivity {
                             public void onResponse(Call<Anwser> call, Response<Anwser> response) {
                                // et_title.setText("");
                                // et_country.setText("");
+                                loadFiles();
                                 goListTrip();
                             }
                             @Override
@@ -143,7 +144,7 @@ public class AddTripActivity extends AppCompatActivity {
         });*/
 
         //para inserir uma imagem da camera do telemovel ou da galeria
-        iv_phototrip.setOnClickListener(new View.OnClickListener(){
+        iv_add_image_trip.setOnClickListener(new View.OnClickListener(){
           @Override
           public void onClick(View v) {
               showPictureDialog();
@@ -219,10 +220,10 @@ public class AddTripActivity extends AppCompatActivity {
             Place place = PlacePicker.getPlace(getApplicationContext(), data);
             //String toastMsg = String.format("Place: %s", place.getName());
             //Toast.makeText(this, toastMsg, Toast.LENGTH_LONG).show();
-            //TextView countryEditText = (TextView)findViewById(R.id.countryEditText);
-            //TextView placeTitleEditText = (TextView)findViewById(R.id.placeTitleEditText);
-            //TextView latitudeEditText = (TextView)findViewById(R.id.latitudeEditText);
-            //TextView longitudeEditText = (TextView)findViewById(R.id.longitudeEditText);
+            TextView country = (TextView)findViewById(R.id.tv_result_country);
+            TextView city = (TextView)findViewById(R.id.tv_result_city);
+            TextView latitud = (TextView)findViewById(R.id.tv_result_lat);
+            TextView longitud = (TextView)findViewById(R.id.tv_result_lon);
 
             Geocoder gcd = new Geocoder(this, Locale.getDefault());
             List<Address> addresses = null;
@@ -230,8 +231,12 @@ public class AddTripActivity extends AppCompatActivity {
                 addresses = gcd.getFromLocation(place.getLatLng().latitude, place.getLatLng().longitude, 1);
                 Log.d("geo",addresses.get(0).getCountryName());
                 Log.d("geo",addresses.get(0).getFeatureName());
-                //countryEditText.setText(addresses.get(0).getCountryName());
-                //placeTitleEditText.setText(addresses.get(0).getFeatureName());
+                country.setText(addresses.get(0).getCountryName());
+                //city.setText(addresses.get(0).getThoroughfare());
+                city.setText(addresses.get(0).getAdminArea());
+                latitud.setText(String.valueOf(addresses.get(0).getLatitude()));
+                longitud.setText(String.valueOf(addresses.get(0).getLongitude()));
+                et_date.findFocus();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -245,10 +250,11 @@ public class AddTripActivity extends AppCompatActivity {
                 Uri contentURI = data.getData();
                 try {
                     Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), contentURI);
-                    String path = saveImage(bitmap);
-                    Toast.makeText(AddTripActivity.this, "Image Saved!", Toast.LENGTH_SHORT).show();
-                    iv_phototrip.setImageBitmap(bitmap);
-                    loadFiles();
+                   // String path = saveImage(bitmap);
+                    //Toast.makeText(AddTripActivity.this, "Image Saved!", Toast.LENGTH_SHORT).show();
+                    iv_add_image_trip.setImageBitmap(bitmap);
+                    iv_add_image_trip.setMinimumHeight(100);
+                    //loadFiles();
 
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -258,10 +264,11 @@ public class AddTripActivity extends AppCompatActivity {
 
         } else if (requestCode == CAMERA) {
             Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
-            iv_phototrip.setImageBitmap(thumbnail);
-            saveImage(thumbnail);
-            loadFiles();
-            Toast.makeText(AddTripActivity.this, "Image Saved!", Toast.LENGTH_SHORT).show();
+            iv_add_image_trip.setImageBitmap(thumbnail);
+            iv_add_image_trip.setMinimumHeight(100);
+            //saveImage(thumbnail);
+            //loadFiles();
+            //Toast.makeText(AddTripActivity.this, "Image Saved!", Toast.LENGTH_SHORT).show();
         }
     }
 
