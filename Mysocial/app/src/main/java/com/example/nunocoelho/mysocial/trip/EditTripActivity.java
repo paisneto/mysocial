@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.nunocoelho.mysocial.R;
@@ -26,7 +27,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -36,8 +39,9 @@ public class EditTripActivity extends AppCompatActivity {
     private Button btn_save, btn_delete, btn_addmomment;
     private Button btn_back;
     private EditText et_title, et_country,et_city,et_description,et_date;
+    private TextView tv_result_country, tv_result_city, tv_result_lat, tv_result_lon;
     private ImageView iv_phototrip;
-    private String strTitle, strCountry, strCity, strDescription, strDate;
+    private String strTitle, strCountry, strCity, strLat, strLon, strDescription, strDate;
 
     private static final String IMAGE_DIRECTORY = "/demonuts";
     private int GALLERY = 1, CAMERA = 2;
@@ -48,18 +52,25 @@ public class EditTripActivity extends AppCompatActivity {
 
         btn_addmomment = (Button) findViewById(R.id.btn_addmomment);
         btn_delete     = (Button) findViewById(R.id.btn_delete);
-        btn_back       = (Button) findViewById(R.id.btn_back);
+        //btn_back       = (Button) findViewById(R.id.btn_back);
         btn_save       = (Button) findViewById(R.id.btn_save);
         iv_phototrip   = (ImageView) findViewById(R.id.iv_fototrip);
         et_title       = (EditText) findViewById(R.id.et_title);
-        et_country     = (EditText)findViewById(R.id.et_country);
-        et_city        = (EditText)findViewById(R.id.et_city);
+
+        tv_result_country     = (TextView)findViewById(R.id.tv_result_country);
+        tv_result_city        = (TextView)findViewById(R.id.tv_result_city);
+
+        tv_result_lat     = (TextView)findViewById(R.id.tv_result_lat);
+        tv_result_lon        = (TextView)findViewById(R.id.tv_result_lon);
+
         et_description = (EditText)findViewById(R.id.et_description);
         et_date        = (EditText) findViewById(R.id.et_date);
 
         strTitle       = et_title.getText().toString().trim();
-        strCountry     = et_country.getText().toString().trim();
-        strCity        = et_city.getText().toString().trim();
+        strCountry     = tv_result_country.getText().toString().trim();
+        strCity        = tv_result_city.getText().toString().trim();
+        strLat         = tv_result_lat.getText().toString().trim();
+        strLon         = tv_result_lon.getText().toString().trim();
         strDescription = et_description.getText().toString().trim();
         strDate        = et_date.getText().toString().trim();
 
@@ -116,16 +127,29 @@ public class EditTripActivity extends AppCompatActivity {
                 MysocialEndpoints.retrofit.create(MysocialEndpoints.class);
         if (!TextUtils.isEmpty(strTitle) && !TextUtils.isEmpty(strCountry) && !TextUtils.isEmpty(strCity)
                 && !TextUtils.isEmpty(strDescription) && !TextUtils.isEmpty(strDate)) {
-            api.addTrip(strTitle, strCountry, strCity, strDescription, strDate).enqueue(new Callback<Anwser>() {
-                @Override
-                public void onResponse(Call<Anwser> call, Response<Anwser> response) {
-                    et_title.setText("");
-                    et_country.setText("");
-                }
-                @Override
-                public void onFailure(Call<Anwser> call, Throwable t) {
-                }
-            });
+            try {
+
+                String DATE_FORMAT_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+                SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT_PATTERN);
+                Date myDate = formatter.parse(strDate);
+                api.addTrip(strTitle, strCountry, strCity, strLat, strLon, strDescription, myDate, "Ernesto Casanova", "ernestonet@msn.com").enqueue(new Callback<Anwser>() {
+                    @Override
+                    public void onResponse(Call<Anwser> call, Response<Anwser> response) {
+
+                        if (response.code()==200)
+                        {
+                            Toast.makeText(getApplicationContext(),"Saved!!", Toast.LENGTH_SHORT).show();
+                        }
+                        else Toast.makeText(getApplicationContext(),"There was a problem saving!!", Toast.LENGTH_SHORT).show();
+                    }
+                    @Override
+                    public void onFailure(Call<Anwser> call, Throwable t) {
+                        Toast.makeText(getApplicationContext(),"There was a problem with upload!", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
