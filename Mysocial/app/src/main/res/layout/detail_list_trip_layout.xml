@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/routines_rv_item"
     android:layout_width="match_parent"
     android:layout_height="72dp"
@@ -12,13 +13,6 @@
         android:layout_gravity="top"
         android:layout_margin="8dp"
         android:background="@drawable/circle_drawable">
-
-        <!--<ImageView
-            android:id="@+id/img_avatar"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentLeft="true"
-            android:scaleType="fitCenter"/>-->
 
         <de.hdodenhof.circleimageview.CircleImageView
             xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -43,7 +37,8 @@
             android:paddingBottom="2dp"
             android:paddingRight="16dp"
             android:textColor="@color/colorPrimary"
-            android:textSize="16sp"/>
+            android:textSize="16sp"
+            tools:ignore="RtlSymmetry" />
 
         <TextView
             android:id="@+id/tv_country"

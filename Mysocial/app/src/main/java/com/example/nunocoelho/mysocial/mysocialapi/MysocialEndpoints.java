@@ -5,6 +5,8 @@ import com.example.nunocoelho.mysocial.moment.AnwserMoment;
 import com.example.nunocoelho.mysocial.moment.EntryDetailsMoment;
 import com.example.nunocoelho.mysocial.trip.Anwser;
 
+import java.util.Date;
+
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -102,8 +104,13 @@ public interface MysocialEndpoints {
             @Field("title") String title,
             @Field("country") String country,
             @Field("city") String city,
+            @Field("lat") String lat,
+            @Field("lon") String lon,
             @Field("description") String description,
-            @Field("date") String date
+            @Field("date") Date date,
+            @Field("postedByName") String name,
+            @Field("postedByEmail") String email
+
     );
 
     //partilhar uma viagem
@@ -124,6 +131,15 @@ public interface MysocialEndpoints {
     @GET("moments/?limit=500&page=1&number=20&sort=-created")
     Call<AnwserMoment> getMomentsTrip(
             @Query("trip") String trip
+    );
+
+    @FormUrlEncoded
+    @PUT("moments/{id}/classifications/")
+    Call<AnwserMoment> getClassifMoments(
+            @Path("id") String id,
+            @Field("value") Number value,
+            @Field("postedByEmail") String postedByEmail,
+            @Field("postedByName") String postedByName
     );
 
     //inserir um momento
