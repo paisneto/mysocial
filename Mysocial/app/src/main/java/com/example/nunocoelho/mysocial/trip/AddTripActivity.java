@@ -1,5 +1,6 @@
 package com.example.nunocoelho.mysocial.trip;
 
+import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -19,6 +20,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -64,6 +66,8 @@ public class AddTripActivity extends AppCompatActivity {
     private static final String IMAGE_DIRECTORY = "/demonuts";
     private int GALLERY = 1, CAMERA = 2, MARKER_PICKER_REQUEST = 3;
     private Bitmap imageBitmap;
+    private DatePickerDialog.OnDateSetListener date;
+    private Calendar myCalendar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +95,41 @@ public class AddTripActivity extends AppCompatActivity {
         et_description = (EditText)findViewById(R.id.et_description);
         et_date        = (EditText) findViewById(R.id.et_date);
 
+
+        myCalendar = Calendar.getInstance();
+        et_date.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                new DatePickerDialog(AddTripActivity.this, date, myCalendar
+                        .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                        myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+            }
+        });
+
+        date = new DatePickerDialog.OnDateSetListener() {
+
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear,
+                                  int dayOfMonth) {
+                // TODO Auto-generated method stub
+                myCalendar.set(Calendar.YEAR, year);
+                myCalendar.set(Calendar.MONTH, monthOfYear);
+                myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                updateLabel();
+            }
+
+            private void updateLabel() {
+
+                String myFormat = "MM/dd/yy"; //In which you need put here
+                SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.ENGLISH);
+
+                et_date.setText(sdf.format(myCalendar.getTime()));
+            }
+
+        };
+
         //gravar a viagem
         btn_save.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,10 +154,15 @@ public class AddTripActivity extends AppCompatActivity {
                             && !TextUtils.isEmpty(strDate)) {
                         try {
 
-                            String DATE_FORMAT_PATTERN = "dd-MM-yyyy";
+                            String DATE_FORMAT_PATTERN = "dd-MM-yyyy";//"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
                             SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT_PATTERN);
                             Date myDate = formatter.parse(strDate);
-                            api.addTrip(strTitle, strCountry, strCity, strLat, strLon, strDescription, myDate, "Ernesto Casanova", "ernestonet@msn.com").enqueue(new Callback<Anwser>() {
+
+                            String MY_DATE_FORMAT_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+                            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(MY_DATE_FORMAT_PATTERN, Locale.getDefault());
+                            Date myFinalDate = simpleDateFormat.parse(myDate.toString());
+
+                            api.addTrip(strTitle, strCountry, strCity, strLat, strLon, strDescription, myFinalDate, "Ernesto Casanova", "ernestonet@msn.com").enqueue(new Callback<Anwser>() {
                                 @Override
                                 public void onResponse(Call<Anwser> call, Response<Anwser> response) {
 
