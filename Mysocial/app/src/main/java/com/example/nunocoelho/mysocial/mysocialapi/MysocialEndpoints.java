@@ -4,6 +4,8 @@ import com.example.nunocoelho.mysocial.moment.AnwserMoment;
 import com.example.nunocoelho.mysocial.moment.EntryDetailsMoment;
 import com.example.nunocoelho.mysocial.trip.Anwser;
 
+import java.util.Date;
+
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -60,8 +62,13 @@ public interface MysocialEndpoints {
             @Field("title") String title,
             @Field("country") String country,
             @Field("city") String city,
+            @Field("lat") String lat,
+            @Field("lon") String lon,
             @Field("description") String description,
-            @Field("date") String date
+            @Field("date") Date date,
+            @Field("postedByName") String name,
+            @Field("postedByEmail") String email
+
     );
 
     //partilhar uma viagem

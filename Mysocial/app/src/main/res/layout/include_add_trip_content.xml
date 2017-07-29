@@ -90,7 +90,7 @@
                     tools:ignore="ContentDescription" />
 
                 <EditText
-                    android:id="@+id/storyDescriptionEditText"
+                    android:id="@+id/et_description"
                     android:inputType="textMultiLine"
                     android:minLines="4"
                     android:maxLines="6"
@@ -118,29 +118,6 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 tools:layout_editor_absoluteY="130dp">
-
-            <!--<ImageView
-                android:id="@+id/btn_marker_picker"
-                android:layout_width="match_parent"
-                android:layout_height="52dp"
-                android:layout_marginEnd="0dp"
-                android:layout_marginRight="0dp"
-                android:layout_marginTop="3dp"
-                android:layout_weight="1"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cv_photo"
-                app:srcCompat="@android:drawable/ic_menu_camera"
-                tools:ignore="ContentDescription" />-->
-
-           <!--<Button
-                    android:id="@+id/btn_marker_picker"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Location"
-                    android:src="@drawable/ic_my_location_gray_24dp"
-                    tools:layout_editor_absoluteX="165dp"
-                    tools:layout_editor_absoluteY="75dp" />-->
 
             <Button
                 android:id="@+id/btn_marker_picker"
@@ -264,7 +241,7 @@
                     android:layout_margin="@dimen/spacing_middle"
                     android:src="@drawable/ic_date_range_gray_24dp"
                     android:tint="@color/material_grey_800"
-                    tools:ignore="ContentDescription" />
+                    tools:ignore="ContentDescription,PrivateResource" />
 
                 <EditText
                     android:id="@+id/et_date"
