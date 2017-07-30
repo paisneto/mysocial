@@ -97,7 +97,7 @@ public class DetailTripActivity extends AppCompatActivity {
             tv_address.setText(adress);
 
             String DATE_FORMAT_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
-            String reformattedStr = new SimpleDateFormat("dd MMM yyyy").format(new SimpleDateFormat(DATE_FORMAT_PATTERN).parse(intent.getStringExtra("date")));
+            String reformattedStr = new SimpleDateFormat("dd MMMM yyyy").format(new SimpleDateFormat(DATE_FORMAT_PATTERN).parse(intent.getStringExtra("date")));
             tv_date.setText(reformattedStr);    // format output
 
            // String adress = intent.getStringExtra("country").concat(", ").concat(intent.getStringExtra("city"));

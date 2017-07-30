@@ -1,6 +1,7 @@
 package com.example.nunocoelho.mysocial.trip;
 
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -28,6 +29,7 @@ import android.widget.Toast;
 
 import com.example.nunocoelho.mysocial.LoginActivity;
 import com.example.nunocoelho.mysocial.R;
+import com.example.nunocoelho.mysocial.helpers.Utils;
 import com.example.nunocoelho.mysocial.moment.AddMommentActivity;
 import com.example.nunocoelho.mysocial.mysocialapi.MysocialEndpoints;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -46,6 +48,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.TimeZone;
+import java.util.UUID;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -66,6 +70,7 @@ public class AddTripActivity extends AppCompatActivity {
     private static final String IMAGE_DIRECTORY = "/demonuts";
     private int GALLERY = 1, CAMERA = 2, MARKER_PICKER_REQUEST = 3;
     private Bitmap imageBitmap;
+    private String tripDate;
     private DatePickerDialog.OnDateSetListener date;
     private Calendar myCalendar;
 
@@ -109,28 +114,30 @@ public class AddTripActivity extends AppCompatActivity {
         });
 
         date = new DatePickerDialog.OnDateSetListener() {
-
+            String MY_DATE_FORMAT_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+            String DATE_FORMAT_PATTERN = "EEE MMM dd HH:mm:ss z yyyy";
+            StringBuilder Date;
             @Override
-            public void onDateSet(DatePicker view, int year, int monthOfYear,
-                                  int dayOfMonth) {
+            public void onDateSet(DatePicker view, int year, int month,
+                                  int day) {
                 // TODO Auto-generated method stub
                 myCalendar.set(Calendar.YEAR, year);
-                myCalendar.set(Calendar.MONTH, monthOfYear);
-                myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                myCalendar.set(Calendar.MONTH, month);
+                myCalendar.set(Calendar.DAY_OF_MONTH, day);
+
+                Date = new StringBuilder().append(year).append("-").append(month + 1).append("-").append(day).append(" ");
                 updateLabel();
             }
 
             private void updateLabel() {
-
-                String myFormat = "MM/dd/yy"; //In which you need put here
-                SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.ENGLISH);
+                tripDate = Date.toString();
+                String myViewFormat = "dd MMMM yyyy"; //In which you need put here
+                SimpleDateFormat sdf = new SimpleDateFormat(myViewFormat, Locale.ENGLISH);
 
                 et_date.setText(sdf.format(myCalendar.getTime()));
             }
 
         };
-
-        //gravar a viagem
         btn_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -140,45 +147,17 @@ public class AddTripActivity extends AppCompatActivity {
                 strLat         = tv_result_lat.getText().toString().trim();
                 strLon         = tv_result_lon.getText().toString().trim();
                 strDescription = et_description.getText().toString().trim();
-                strDate        = et_date.getText().toString().trim();
 
                 //vai executar metodo para verificar se os campos estão preenchidos
                 if (executeValidation()) {
-                    MysocialEndpoints api = MysocialEndpoints.retrofit.create(MysocialEndpoints.class);
                     if (!TextUtils.isEmpty(strTitle)
                             && !TextUtils.isEmpty(strCountry)
                             && !TextUtils.isEmpty(strCity)
                             && !TextUtils.isEmpty(strLat)
                             && !TextUtils.isEmpty(strLon)
-                            && !TextUtils.isEmpty(strDescription)
-                            && !TextUtils.isEmpty(strDate)) {
+                            && !TextUtils.isEmpty(strDescription)) {
                         try {
-
-                            String DATE_FORMAT_PATTERN = "dd-MM-yyyy";//"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
-                            SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT_PATTERN);
-                            Date myDate = formatter.parse(strDate);
-
-                            String MY_DATE_FORMAT_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
-                            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(MY_DATE_FORMAT_PATTERN, Locale.getDefault());
-                            Date myFinalDate = simpleDateFormat.parse(myDate.toString());
-
-                            api.addTrip(strTitle, strCountry, strCity, strLat, strLon, strDescription, myFinalDate, "Ernesto Casanova", "ernestonet@msn.com").enqueue(new Callback<Anwser>() {
-                                @Override
-                                public void onResponse(Call<Anwser> call, Response<Anwser> response) {
-
-                                    if (response.code()==200)
-                                    {
-                                        loadFiles();
-                                        getClearAll();
-                                        goListTrip();
-                                    }
-                                    else Toast.makeText(getApplicationContext(),"There was a problem saving!!", Toast.LENGTH_SHORT).show();
-                                }
-                                @Override
-                                public void onFailure(Call<Anwser> call, Throwable t) {
-                                    Toast.makeText(getApplicationContext(),"There was a problem with upload!", Toast.LENGTH_SHORT).show();
-                                }
-                            });
+                            loadFiles(strTitle, strCountry, strCity, strLat, strLon, strDescription, tripDate.toString());
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -200,15 +179,6 @@ public class AddTripActivity extends AppCompatActivity {
                 }
             }
         });
-        //
-        //botão para ir para a addmommentactivity
-        /*btn_addmomment = (Button)findViewById(R.id.btn_addmomment);
-        btn_addmomment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goAddMomment();
-            }
-        });*/
 
         //para inserir uma imagem da camera do telemovel ou da galeria
         iv_add_image_trip.setOnClickListener(new View.OnClickListener(){
@@ -217,14 +187,24 @@ public class AddTripActivity extends AppCompatActivity {
               showPictureDialog();
           }
         });
+    }
 
-        //voltar para a ultima activity
-        /*btn_back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goListTrip();
-            }
-        });*/
+    public Date parseDate(String strDate, String newPattern) {
+        //strDate = "Fri Oct 10 23:11:29 2014";
+        //String newPattern = "EEE MMM dd HH:mm:ss yyyy";
+        SimpleDateFormat formatter = new SimpleDateFormat(newPattern);
+        formatter.setTimeZone(TimeZone.getTimeZone("IST"));
+        Date date;
+        try {
+            date = formatter.parse(strDate.trim());
+            Log.i("minal", "date:" + date);
+            return date;
+        } catch (java.text.ParseException e) {
+            e.printStackTrace();
+            Log.d("Populace", "ParseException: " + e.getLocalizedMessage());
+        }
+        return null;
+
     }
 
     private void getClearAll()
@@ -377,15 +357,20 @@ public class AddTripActivity extends AppCompatActivity {
     }
 
 
-    private void loadFiles()
+    private void loadFiles(String _strTitle, String _strCountry, String _strCity, String _strLat, String _strLon, String _strDescription, String _myDate)
     {
+        final Dialog progress_spinner = Utils.LoadingSpinner(AddTripActivity.this);
+        progress_spinner.show();
 
+        UUID uuid = UUID.randomUUID();
+        String randomUUIDString = uuid.toString();
         String path = Environment.getExternalStorageDirectory().toString() + IMAGE_DIRECTORY;
         OutputStream fOut = null;
-        File fileU = new File(path, "temp.jpg"); // the File to save , append increasing numeric counter to prevent files from getting overwritten.
+        File fileU = new File(path, randomUUIDString+".jpg"); // the File to save , append increasing numeric counter to prevent files from getting overwritten.
         try {
             fOut = new FileOutputStream(fileU);
         } catch (FileNotFoundException e) {
+            progress_spinner.dismiss();
             e.printStackTrace();
         }
 
@@ -394,11 +379,13 @@ public class AddTripActivity extends AppCompatActivity {
         try {
             fOut.flush(); // Not really required
         } catch (IOException e) {
+            progress_spinner.dismiss();
             e.printStackTrace();
         }
         try {
             fOut.close(); // do not forget to close the stream
         } catch (IOException e) {
+            progress_spinner.dismiss();
             e.printStackTrace();
         }
 
@@ -409,31 +396,46 @@ public class AddTripActivity extends AppCompatActivity {
         RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"),file);
 
         // MultipartBody.Part is used to send also the actual file name
-        MultipartBody.Part body = MultipartBody.Part.createFormData("temp.jpg", file.getName(), requestFile);
+        MultipartBody.Part body = MultipartBody.Part.createFormData(randomUUIDString+".jpg", file.getName(), requestFile);
 
         MysocialEndpoints api = MysocialEndpoints.retrofit.create(MysocialEndpoints.class);
-        RequestBody _id = RequestBody.create(okhttp3.MultipartBody.FORM, "593526ab66a1cd0004b50d1e");
-        RequestBody user = RequestBody.create(okhttp3.MultipartBody.FORM, "593526ab66a1cd0004b50d1e");
+        RequestBody title = RequestBody.create(okhttp3.MultipartBody.FORM, _strTitle);
+        RequestBody country = RequestBody.create(okhttp3.MultipartBody.FORM, _strCountry);
+        RequestBody city = RequestBody.create(okhttp3.MultipartBody.FORM, _strCity);
+        RequestBody lat = RequestBody.create(okhttp3.MultipartBody.FORM, _strLat);
+        RequestBody lon = RequestBody.create(okhttp3.MultipartBody.FORM, _strLon);
+        RequestBody description = RequestBody.create(okhttp3.MultipartBody.FORM, _strDescription);
+        RequestBody date = RequestBody.create(okhttp3.MultipartBody.FORM, _myDate);
+        RequestBody postedByName = RequestBody.create(okhttp3.MultipartBody.FORM, "Ernesto Casanova");
+        RequestBody postedByEmail = RequestBody.create(okhttp3.MultipartBody.FORM, "ernestonet@msn.com");
 
-        Call<Anwser> call = api.uploadTripFiles(
-                _id, user, body
+        Call<Anwser> call = api.addTrip(
+                title, country, city, lat, lon, description, date, postedByName, postedByEmail, body
         );
+
+
         call.enqueue(new Callback<Anwser>() {
 
             @Override
             public void onResponse(Call<Anwser> call, Response<Anwser> response) {
                 if(response.code() == 200) {
+                    progress_spinner.dismiss();
+                    getClearAll();
+                    Toast.makeText(AddTripActivity.this, "Trip Saved!", Toast.LENGTH_SHORT).show();
+                    goListTrip();
 
-                    //spinner.setVisibility(View.GONE);
-                    Toast.makeText(AddTripActivity.this, "Image Saved in server!", Toast.LENGTH_SHORT).show();
+                    //onBackPressed();
+                } else  {
+                    progress_spinner.dismiss();
+                    Toast.makeText(AddTripActivity.this, "Error Saving!", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<Anwser> call, Throwable t) {
+                progress_spinner.dismiss();
+                Toast.makeText(AddTripActivity.this, "Error Saving!", Toast.LENGTH_SHORT).show();
                 t.printStackTrace();
-                //spinner.setVisibility(View.GONE);
-                Toast.makeText(AddTripActivity.this, "Erro Saving!", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -441,7 +443,7 @@ public class AddTripActivity extends AppCompatActivity {
     //metodo que excuta as validações
     protected boolean executeValidation(){
         if (TextUtils.isEmpty(strTitle) || TextUtils.isEmpty(strCountry) || TextUtils.isEmpty(strCity)
-                || TextUtils.isEmpty(strDescription) || TextUtils.isEmpty(strDate)) {
+                || TextUtils.isEmpty(strDescription)) {
 
             /*final AlertDialog.Builder pictureDialog = new AlertDialog.Builder(this);
             pictureDialog.setTitle("Preencha os Campos em Falta.");

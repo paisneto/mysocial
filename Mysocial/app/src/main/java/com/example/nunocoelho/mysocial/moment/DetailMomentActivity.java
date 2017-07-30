@@ -171,7 +171,6 @@ public class DetailMomentActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<AnwserMoment> call, Throwable t) {
                 t.printStackTrace();
-                //spinner.setVisibility(View.GONE);
             }
         });
     }

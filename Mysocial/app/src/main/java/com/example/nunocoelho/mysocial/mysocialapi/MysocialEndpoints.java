@@ -5,14 +5,11 @@ import com.example.nunocoelho.mysocial.moment.AnwserMoment;
 import com.example.nunocoelho.mysocial.moment.EntryDetailsMoment;
 import com.example.nunocoelho.mysocial.trip.Anwser;
 
-import java.util.Date;
-
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -98,7 +95,7 @@ public interface MysocialEndpoints {
     );
 
     //inserir uma viagem
-    @FormUrlEncoded
+    /*@FormUrlEncoded
     @POST("trips/")
     Call<Anwser> addTrip(
             @Field("title") String title,
@@ -107,10 +104,27 @@ public interface MysocialEndpoints {
             @Field("lat") String lat,
             @Field("lon") String lon,
             @Field("description") String description,
-            @Field("date") Date date,
+            @Field("date") String date,// Date
             @Field("postedByName") String name,
-            @Field("postedByEmail") String email
+            @Field("postedByEmail") String email//,
+           // @Part MultipartBody.Part file
 
+    );*/
+
+    //inserir uma viagem
+    @Multipart
+    @POST("trips/")
+    Call<Anwser> addTrip(
+            @Part("title") RequestBody title,
+            @Part("country") RequestBody country,
+            @Part("city") RequestBody city,
+            @Part("lat") RequestBody lat,
+            @Part("lon") RequestBody lon,
+            @Part("description") RequestBody description,
+            @Part("date") RequestBody date,
+            @Part("username") RequestBody postedByName,
+            @Part("useremail") RequestBody postedByEmail,
+            @Part MultipartBody.Part file
     );
 
     //partilhar uma viagem

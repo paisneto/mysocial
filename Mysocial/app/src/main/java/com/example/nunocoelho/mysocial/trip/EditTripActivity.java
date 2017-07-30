@@ -27,13 +27,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class EditTripActivity extends AppCompatActivity {
     private Button btn_save, btn_delete, btn_addmomment;
@@ -122,17 +116,33 @@ public class EditTripActivity extends AppCompatActivity {
     }
 
     //metodo para introduzir os dados da viagem
-    protected void addTrip(){
+    protected void addTrip(){//edit trip
         MysocialEndpoints api =
                 MysocialEndpoints.retrofit.create(MysocialEndpoints.class);
         if (!TextUtils.isEmpty(strTitle) && !TextUtils.isEmpty(strCountry) && !TextUtils.isEmpty(strCity)
                 && !TextUtils.isEmpty(strDescription) && !TextUtils.isEmpty(strDate)) {
             try {
 
-                String DATE_FORMAT_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+
+        /*MysocialEndpoints api = MysocialEndpoints.retrofit.create(MysocialEndpoints.class);
+        RequestBody _id = RequestBody.create(okhttp3.MultipartBody.FORM, trip_id);
+        RequestBody user = RequestBody.create(okhttp3.MultipartBody.FORM, "593526ab66a1cd0004b50d1e");
+
+        Call<Anwser> call = api.uploadTripFiles(
+                _id, user, body
+        );*/
+
+
+
+        /*Call<Anwser> call = api.uploadTripFiles(
+                _id, country, body
+        );*/
+
+
+/*                String DATE_FORMAT_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
                 SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT_PATTERN);
                 Date myDate = formatter.parse(strDate);
-                api.addTrip(strTitle, strCountry, strCity, strLat, strLon, strDescription, myDate, "Ernesto Casanova", "ernestonet@msn.com").enqueue(new Callback<Anwser>() {
+                api.addTrip(strTitle, strCountry, strCity, strLat, strLon, strDescription, myDate.toString(), "Ernesto Casanova", "ernestonet@msn.com").enqueue(new Callback<Anwser>() {
                     @Override
                     public void onResponse(Call<Anwser> call, Response<Anwser> response) {
 
@@ -146,7 +156,7 @@ public class EditTripActivity extends AppCompatActivity {
                     public void onFailure(Call<Anwser> call, Throwable t) {
                         Toast.makeText(getApplicationContext(),"There was a problem with upload!", Toast.LENGTH_SHORT).show();
                     }
-                });
+                });*/
             } catch (Exception e) {
                 e.printStackTrace();
             }

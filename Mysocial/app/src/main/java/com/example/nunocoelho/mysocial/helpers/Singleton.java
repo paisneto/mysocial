@@ -7,6 +7,7 @@ import android.content.Context;
  */
 
 public class Singleton {
+    private String username = null, email = null;
     private static Singleton instance = null;
 
     //a private constructor so no instances can be made outside this class
@@ -23,3 +24,4 @@ public class Singleton {
     //Initialize this or any other variables in probably the Application class
     public void init(Context context) {}
 }
+
