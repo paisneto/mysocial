@@ -295,7 +295,7 @@ public class LoginActivity extends AppCompatActivity {
     //metodo chamado para mudar para a ListTripActivity
     protected void goListTripActivity(){
 
-       photoUrl  = "https://meimysocial.blob.core.windows.net/upload/ec8f14e8-ce10-414b-833c-6b4105e88ac0.jpg";
+     //  photoUrl  = "https://meimysocial.blob.core.windows.net/upload/ec8f14e8-ce10-414b-833c-6b4105e88ac0.jpg";
 
         Intent intent = new Intent(this, ListTripActivity.class);
         intent.putExtra(EXTRA_MESSAGE, "LoginActivity");

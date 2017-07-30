@@ -70,6 +70,7 @@ public class ListTripActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
         View header=navigationView.getHeaderView(0);
         ImageView iv_photo = (ImageView)header.findViewById(R.id.iv_photo);
         TextView tv_name = (TextView)header.findViewById(R.id.tv_name);
@@ -78,7 +79,7 @@ public class ListTripActivity extends AppCompatActivity
         tv_email.setText(userEmail);
 
         if (photoUrl == null) iv_photo.setImageResource(R.drawable.logo);
-        else new Utils.DownloadImageTask((ImageView) iv_photo.findViewById(R.id.nav_view)).execute(MysocialEndpoints.MEDIA_URL + photoUrl);
+        else new Utils.DownloadImageTask((ImageView) iv_photo.findViewById(R.id.iv_photo)).execute(photoUrl);
 
 //        name = (TextView)header.findViewById(R.id.tv_name);
 //        email = (TextView)header.findViewById(R.id.tv_email);
@@ -123,8 +124,8 @@ public class ListTripActivity extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-
-//        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+//
+//       NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
 //        navigationView.setNavigationItemSelectedListener(this);
     }
 
