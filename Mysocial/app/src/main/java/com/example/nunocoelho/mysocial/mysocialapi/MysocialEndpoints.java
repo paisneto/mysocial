@@ -30,10 +30,8 @@ public interface MysocialEndpoints {
     final static String BASE_API_URL = "https://secret-plains-68464.herokuapp.com/api/v1/";
     final static String BASE_API_URL_V2 = "https://secret-plains-68464.herokuapp.com/api/v2/";
     final static String BASE_URL = "https://secret-plains-68464.herokuapp.com/";
-    //final static String MEDIA_URL = "https://s3.eu-west-2.amazonaws.com/meimysocial/upload/media/";
     final static String MEDIA_URL = "https://meimysocial.blob.core.windows.net/upload/";
 
-    //get user by email
     @GET("users/{email}")
     Call<Details> getUser(
             @Path("email") String email
@@ -73,44 +71,20 @@ public interface MysocialEndpoints {
 
 
     //
-    @GET("trips/?limit=500&page=1&number=100&sort=-created")//&title={title}")
+    @GET("trips/?limit=500&page=1&number=100&sort=-created")
     Call<Anwser> getAllTrips(
             @Query("postedByEmail") String postedByEmail, @Query("title") String title
-            //@Path("limit") String limit,
-            //@Path("page") String page,
-            //@Path("number") String number,
-            //@Path("sort") String sort,
-           // @Path("title") String title//search field name
     );
 
     @GET("trips/{id}/")
     Call<Anwser> getTripPhrase(
             @Path("id") String trip
-            /*,
-            @Query("docs") String docs*/
     );
 
     @GET("trips/{id}/")
     Call<Anwser> getTripbyId(
             @Path("id") String id
     );
-
-    //inserir uma viagem
-    /*@FormUrlEncoded
-    @POST("trips/")
-    Call<Anwser> addTrip(
-            @Field("title") String title,
-            @Field("country") String country,
-            @Field("city") String city,
-            @Field("lat") String lat,
-            @Field("lon") String lon,
-            @Field("description") String description,
-            @Field("date") String date,// Date
-            @Field("postedByName") String name,
-            @Field("postedByEmail") String email//,
-           // @Part MultipartBody.Part file
-
-    );*/
 
     //inserir uma viagem
     @Multipart
@@ -128,7 +102,6 @@ public interface MysocialEndpoints {
             @Part MultipartBody.Part file
     );
 
-    //partilhar uma viagem
     @FormUrlEncoded
     @PUT("trips/{id}/share/")
     Call<Anwser> shareTrip(
@@ -137,7 +110,6 @@ public interface MysocialEndpoints {
     );
 
     @Multipart
-    //@POST("trips/{_id}/users/{user}/files/")
     @POST("trips/users/files/")
     Call<Anwser> uploadTripFiles(@Part("_id") RequestBody _id, @Part("user") RequestBody user, @Part MultipartBody.Part file);
 
@@ -156,9 +128,6 @@ public interface MysocialEndpoints {
             @Field("postedByEmail") String postedByEmail,
             @Field("postedByName") String postedByName
     );
-
-    //inserir um momento
-    //@FormUrlEncoded
 
     @Multipart
     @POST("moments/")

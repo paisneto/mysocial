@@ -90,7 +90,6 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onSuccess(LoginResult loginResult) {
-
                 newUser.setOauthID(loginResult.getAccessToken().getUserId());
                 newUser.setToken(loginResult.getAccessToken().getToken());
                 getFacebookData(loginResult, newUser);

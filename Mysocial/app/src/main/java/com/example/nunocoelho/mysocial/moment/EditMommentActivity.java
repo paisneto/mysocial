@@ -28,7 +28,7 @@ import retrofit2.Response;
 public class EditMommentActivity extends AppCompatActivity {
 
     private static MomentsAdapter adapter;
-    private ListView lv_comments;
+    private ListView lv_edit_comments;
     private Button btn_expand;
     private TextView tv_titledetail, tv_placedetail, tv_datedetail, tv_narrativedetail, tv_latdetail,  tv_londetail;
     private String _id_moment, strTripID, strOriginalName, userName, userEmail;
@@ -81,23 +81,22 @@ public class EditMommentActivity extends AppCompatActivity {
         strTripID = intent.getStringExtra("trip");
         strOriginalName = intent.getStringExtra("originalname");
 
-        lv_comments    = (ListView) findViewById(R.id.lv_comments);
+        lv_edit_comments    = (ListView) findViewById(R.id.lv_edit_comments);
 
         entryDetailsMomentList = new ArrayList<>();
 
         adapter = new MomentsAdapter(entryDetailsMomentList, getApplicationContext());
 
-        lv_comments.setAdapter(adapter);
+        lv_edit_comments.setAdapter(adapter);
 
-        showMoments();
-
-        lv_comments.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        lv_edit_comments.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int i, long id) {
                 //goDetailMoment(i);
             }
         });
 
+        showMoments();
 
         btn_save_comment.setOnClickListener(new View.OnClickListener(
         ) {

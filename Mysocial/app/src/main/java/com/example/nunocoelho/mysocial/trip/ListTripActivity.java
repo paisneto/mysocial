@@ -80,6 +80,13 @@ public class ListTripActivity extends AppCompatActivity
             }
         });
 
+        // Configure the refreshing colors
+        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+
+
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -216,7 +223,6 @@ public class ListTripActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
-
 
         // Associate searchable configuration with the SearchView
         searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();

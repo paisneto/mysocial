@@ -60,7 +60,8 @@
                 android:id="@+id/btn_expand"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Button" />
+                android:text="Button"
+                tools:ignore="HardcodedText" />
 
             <LinearLayout
                 android:id="@+id/ll_address"
