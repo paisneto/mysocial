@@ -88,23 +88,6 @@ public class DetailMomentActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        //entryDetailsMomentList = new ArrayList<>();
-
-        //adapter = new MomentsAdapter(entryDetailsMomentList, getApplicationContext());
-
-        //lv_moments_images.setAdapter(adapter);
-
-        //showMoments();
-
-        /*iv_details_img_moment.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int i, long id) {
-                goDetailMoment(i);
-            }
-        });*/
-
-        //iv_details_img_moment.setImageResource(R.drawable.logo);
-
         if (strOriginalName.isEmpty()) iv_details_img_moment.setImageResource(R.drawable.logo);
         else new Utils.DownloadImageTask((ImageView) iv_details_img_moment.findViewById(R.id.iv_details_img_moment)).execute(MysocialEndpoints.MEDIA_URL + strOriginalName);
 
