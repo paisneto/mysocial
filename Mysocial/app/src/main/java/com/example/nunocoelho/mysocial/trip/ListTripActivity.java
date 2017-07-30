@@ -160,7 +160,7 @@ public class ListTripActivity extends AppCompatActivity
     protected void showTrips(){
         final Dialog progress_spinner = Utils.LoadingSpinner(this);
         progress_spinner.show();
-
+        entryDetailsList.clear();
         MysocialEndpoints api = MysocialEndpoints.retrofit.create(MysocialEndpoints.class);
         Call<Anwser> call = api.getAllTrips(userEmail, searchText);
         call.enqueue(new Callback<Anwser>() {
@@ -216,19 +216,15 @@ public class ListTripActivity extends AppCompatActivity
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                searchText = query;
-                showTrips();
-                //Toast.makeText(ListTripActivity.this, "onQueryTextSubmit!", Toast.LENGTH_SHORT).show();
+                if (query.length() > 0) {
+                    searchText = query;
+                    showTrips();
+                }
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                if (newText.length() > 3) {
-                    //searchText = newText;
-                    //showTrips();
-                    //Toast.makeText(ListTripActivity.this, "onQueryTextChange!", Toast.LENGTH_SHORT).show();
-                }
                 return false;
             }
         });
