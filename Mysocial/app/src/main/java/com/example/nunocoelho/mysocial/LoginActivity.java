@@ -60,10 +60,10 @@ public class LoginActivity extends AppCompatActivity {
 
         String logOut = intent.getStringExtra("kill_user");
 
-
         callbackManager = CallbackManager.Factory.create();
         LoginButton loginButton = (LoginButton)findViewById(R.id.login_button);
         loginButton.setReadPermissions("email", "public_profile","user_birthday");
+
 
 
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
@@ -79,7 +79,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onCancel() {
-
+                //LoginManager.getInstance().logOut();
             }
 
             @Override
