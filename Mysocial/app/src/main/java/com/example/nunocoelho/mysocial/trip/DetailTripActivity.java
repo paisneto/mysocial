@@ -58,7 +58,7 @@ public class DetailTripActivity extends AppCompatActivity {
 
     private static MomentsAdapter adapter;
     private Button btn_back;
-    private String _id_trip, strFilePath;
+    private String _id_trip, strFilePath, userName, userEmail;
     private FloatingActionButton btn_addmomment;
     private ImageView iv_image_selected, img_trip_default;
     private ListView lv_momments;
@@ -91,6 +91,9 @@ public class DetailTripActivity extends AppCompatActivity {
 
         _id_trip = intent.getStringExtra("_id");
         tv_title.setText(intent.getStringExtra("title"));
+        userName             = intent.getStringExtra("userName");
+        userEmail             = intent.getStringExtra("userEmail");
+
         try {
             String city = (String.valueOf(intent.getStringExtra("city") == null ? "" : ", " + String.valueOf(intent.getStringExtra("city"))));
             String adress = String.valueOf(intent.getStringExtra("country"))  + city;
@@ -326,7 +329,7 @@ public class DetailTripActivity extends AppCompatActivity {
         // MultipartBody.Part is used to send also the actual file name
         MultipartBody.Part body = MultipartBody.Part.createFormData(fileName, file.getName(), requestFile);
         RequestBody _id = RequestBody.create(okhttp3.MultipartBody.FORM, _id_trip);
-        RequestBody user = RequestBody.create(okhttp3.MultipartBody.FORM, "593526ab66a1cd0004b50d1e");
+        RequestBody user = RequestBody.create(okhttp3.MultipartBody.FORM, userEmail);
 
         MysocialEndpoints api = MysocialEndpoints.retrofit.create(MysocialEndpoints.class);
         Call<Anwser> call = api.uploadTripFiles(
@@ -337,8 +340,6 @@ public class DetailTripActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Anwser> call, Response<Anwser> response) {
                 if(response.code() == 200) {
-
-                    //spinner.setVisibility(View.GONE);
                     Toast.makeText(DetailTripActivity.this, "Image Saved!", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -364,6 +365,9 @@ public class DetailTripActivity extends AppCompatActivity {
             intent.putExtra("trip", adapter.getItem(i).getTrip());
             intent.putExtra("lat", adapter.getItem(i).getLat());
             intent.putExtra("lon", adapter.getItem(i).getLon());
+            intent.putExtra("originalname", adapter.getItem(i).getOriginalname());
+            intent.putExtra("userName", userName);
+            intent.putExtra("userEmail", userEmail);
             startActivity(intent);
         } catch (Exception e) {
             e.printStackTrace();
@@ -374,6 +378,15 @@ public class DetailTripActivity extends AppCompatActivity {
     protected void goAddMoment(Intent i){
         Intent intent = new Intent(this, AddMommentActivity.class);
         intent.putExtra("_id", i.getStringExtra("_id"));
+
+        intent.putExtra("title", i.getStringExtra("title"));
+        intent.putExtra("country", i.getStringExtra("country"));
+        intent.putExtra("city", i.getStringExtra("city"));
+        intent.putExtra("date", i.getStringExtra("date"));
+        intent.putExtra("description", i.getStringExtra("description"));
+        intent.putExtra("originalname", i.getStringExtra("originalname"));
+        intent.putExtra("userName", userName);
+        intent.putExtra("userEmail", userEmail);
         startActivity(intent);
     }
 

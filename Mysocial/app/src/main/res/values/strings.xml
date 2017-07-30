@@ -70,5 +70,8 @@
     <string name="location">Location</string>
     <string name="longitude">Longitude</string>
     <string name="title">Title</string>
+    <string name="narrative">Narrative</string>
+    <string name="place">Place</string>
+    <string name="edit_moment">Edit Moment</string>
 
 </resources>

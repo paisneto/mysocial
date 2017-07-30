@@ -75,6 +75,7 @@ public interface MysocialEndpoints {
     //
     @GET("trips/?limit=500&page=1&number=100&sort=-created")//&title={title}")
     Call<Anwser> getAllTrips(
+            @Query("postedByEmail") String postedByEmail
             //@Path("limit") String limit,
             //@Path("page") String page,
             //@Path("number") String number,
@@ -157,17 +158,21 @@ public interface MysocialEndpoints {
     );
 
     //inserir um momento
-    @FormUrlEncoded
+    //@FormUrlEncoded
+
+    @Multipart
     @POST("moments/")
     Call<EntryDetailsMoment> addMomment(
-            @Field("title") String title,
-            @Field("place") String place,
-            @Field("moment_date") String moment_date,
-            @Field("narrative") String narrative,
-            @Field("lat") String lat,
-            @Field("lon") String lon,
-            @Field("trip") String trip
+            @Part("title") RequestBody title,
+            @Part("place") RequestBody place,
+            @Part("moment_date") RequestBody moment_date,
+            @Part("narrative") RequestBody narrative,
+            @Part("lat") RequestBody lat,
+            @Part("lon") RequestBody lon,
+            @Part("trip") RequestBody trip,
+            @Part MultipartBody.Part file
     );
+
 
     @FormUrlEncoded
     @POST("countries/country/")

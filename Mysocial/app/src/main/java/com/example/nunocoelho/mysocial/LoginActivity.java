@@ -8,10 +8,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import android.support.design.widget.NavigationView;
 
+import com.example.nunocoelho.mysocial.helpers.Utils;
 import com.example.nunocoelho.mysocial.login.Details;
 import com.example.nunocoelho.mysocial.mysocialapi.MysocialEndpoints;
 import com.example.nunocoelho.mysocial.trip.ListTripActivity;
@@ -46,6 +48,8 @@ public class LoginActivity extends AppCompatActivity {
     private View view;
     private LoginButton LoginButton;
     EditText tv_username, tv_password;
+    private String userName = "", userEmail = "", photoUrl ="";
+
     public final static String EXTRA_MESSAGE = "com.example.nunocoelho.mysocial.MESSAGE";
 
 
@@ -65,10 +69,10 @@ public class LoginActivity extends AppCompatActivity {
 
         String logOut = intent.getStringExtra("kill_user");
 
-
         callbackManager = CallbackManager.Factory.create();
         LoginButton loginButton = (LoginButton)findViewById(R.id.login_button);
         loginButton.setReadPermissions("email", "public_profile","user_birthday");
+
 
 
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
@@ -84,7 +88,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onCancel() {
-
+                //LoginManager.getInstance().logOut();
             }
 
             @Override
@@ -105,18 +109,6 @@ public class LoginActivity extends AppCompatActivity {
                         user.deleteFromRealm();
                         realm.commitTransaction();
 
-//                        TextView nameTextView = (TextView)view.findViewById(R.id.nameTextView);
-//                        TextView emailTextView = (TextView)view.findViewById(R.id.emailTextView);
-//                        TextView createdTextView = (TextView)view.findViewById(R.id.createdTextView);
-//                        ImageView avatarImageView = (ImageView)view.findViewById(R.id.avatarImageView);
-//
-//                        avatarImageView.setImageResource(R.mipmap.travel_with_me_color);
-//                        nameTextView.setText("New User");
-//                        emailTextView.setText("New Email");
-//                        createdTextView.setText("Created on: ");
-//
-//
-//                        mListenerLogout.onFragmentLogout();
                     }
 
                 }
@@ -124,8 +116,6 @@ public class LoginActivity extends AppCompatActivity {
         };
 
         accessTokenTracker.startTracking();
-
-
 
         Details user = realm.where(Details.class).findFirst();
         if(user != null){
@@ -138,21 +128,8 @@ public class LoginActivity extends AppCompatActivity {
     private void loadProfile(Details user){
 
 
-      TextView tv_name = (TextView)findViewById(R.id.tv_name);
-   //    TextView tv_email = (TextView)findViewById(R.id.tv_email);
-     // ImageView iv_photo = (ImageView)view.findViewById(R.id.iv_photo);
-//
-       // final String email = user.getEmail().toString();
-       // final String oauthID = user.getOauthID().toString();
-       // final String token = user.getToken().toString();
-        final String name = user.getName();
-      //  final String first_name = user.getFirstName();
-      //  final String photoUrl = user.getPhotoUri();
-
-
-        //Picasso.with(fragmentContext).load(user.getPhotoUri()).into(iv_photo);
-        tv_name.setText(name);
-       // tv_email.setText("aasads@asas.com");
+        userName = user.getName();
+        userEmail = user.getEmail();
 
 
         goListTripActivity();
@@ -170,12 +147,15 @@ public class LoginActivity extends AppCompatActivity {
                     public void onCompleted(JSONObject object, GraphResponse response) {
                         // Application code
                         try {
+                            userName = response.getJSONObject().getString("first_name")+" "+response.getJSONObject().getString("last_name");
+                            userEmail = response.getJSONObject().getString("email");
                             user.setEmail(response.getJSONObject().getString("email"));
-                            user.setName(response.getJSONObject().getString("first_name")+" "+response.getJSONObject().getString("last_name"));
+                            user.setName(userName);
                             user.setFirstName(response.getJSONObject().getString("first_name"));
                             user.setLastName(response.getJSONObject().getString("last_name"));
                             user.setGender(response.getJSONObject().getString("gender"));
                             user.setUsername(response.getJSONObject().getString("email"));
+                            //user.setPhotoUri(response.getJSONObject().get("picture").toString());
 
                             getFacebookPicture(loginResult, user);
 
@@ -206,6 +186,7 @@ public class LoginActivity extends AppCompatActivity {
                         try {
 
                             user.setPhotoUri(response.getJSONObject().getJSONObject("data").getString("url"));
+                            photoUrl = response.getJSONObject().getJSONObject("data").getString("url");
                             getLogin(user);
 
                         } catch (JSONException e) {
@@ -243,10 +224,10 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void updateUser(Details user){
-        final String email = user.getEmail().toString();
+        final String email = userEmail = user.getEmail().toString();
         final String oauthID = user.getOauthID().toString();
         final String token = user.getToken().toString();
-        final String name = user.getName().toString();
+        final String name = userName = user.getName().toString();
         final String first_name = user.getFirstName().toString();
         final String last_name = user.getLastName().toString();
         final String username = user.getUsername().toString();
@@ -261,7 +242,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 if(response.code()==200){
                     Details user = response.body();
-                    saveToRealm(user);
+
                     loadProfile(user);
                     goListTripActivity();
 
@@ -295,7 +276,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onResponse(Call<Details> call, Response<Details> response) {
                 if(response.code() == 200){
                     Details user = response.body();
-                    saveToRealm(user);
+
                     loadProfile(user);
                     goListTripActivity();
 
@@ -313,8 +294,14 @@ public class LoginActivity extends AppCompatActivity {
 
     //metodo chamado para mudar para a ListTripActivity
     protected void goListTripActivity(){
+
+       photoUrl  = "https://meimysocial.blob.core.windows.net/upload/ec8f14e8-ce10-414b-833c-6b4105e88ac0.jpg";
+
         Intent intent = new Intent(this, ListTripActivity.class);
         intent.putExtra(EXTRA_MESSAGE, "LoginActivity");
+        intent.putExtra("userName", userName);
+        intent.putExtra("userEmail", userEmail);
+        intent.putExtra("photoUrl", photoUrl);
         startActivity(intent);
     }
     //metodo chamado para mudar para a RecoverPassActivity

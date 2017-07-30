@@ -9,19 +9,20 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ListView;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.nunocoelho.mysocial.LoginActivity;
 import com.example.nunocoelho.mysocial.R;
 import com.example.nunocoelho.mysocial.adapters.MomentsAdapter;
+import com.example.nunocoelho.mysocial.helpers.Utils;
 import com.example.nunocoelho.mysocial.mysocialapi.MysocialEndpoints;
 import com.example.nunocoelho.mysocial.trip.EditTripActivity;
 import com.example.nunocoelho.mysocial.trip.ListTripActivity;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import retrofit2.Call;
@@ -32,10 +33,10 @@ public class DetailMomentActivity extends AppCompatActivity {
 
     private static MomentsAdapter adapter;
     private Button btn_back, btn_class_1, btn_class_2, btn_class_3;
-    private String _id_moment;
+    private String _id_moment, strTripID, strOriginalName, userName, userEmail;
     private FloatingActionButton btn_editmomment;
-    private ListView lv_momments;
-    private TextView tv_titledetail, tv_countrydetail, tv_citydetail, tv_datedetail, tv_descriptiondetail;
+    private ImageView iv_details_img_moment;
+    private TextView tv_titledetail, tv_placedetail, tv_datedetail, tv_narrativedetail, tv_latdetail,  tv_londetail;
     private ArrayList<EntryDetailsMoment> entryDetailsMomentList;
 
     @Override
@@ -53,45 +54,65 @@ public class DetailMomentActivity extends AppCompatActivity {
         btn_editmomment = (FloatingActionButton) findViewById(R.id.btn_editmomment);
         //btn_back = (Button) findViewById(R.id.btn_back);
         //fab_search = (FloatingActionButton)findViewById(R.id.fab_search);
-        tv_titledetail = (TextView)findViewById(R.id.tv_titledetail);
-        tv_countrydetail = (TextView)findViewById(R.id.tv_countrydetail);
-        tv_citydetail = (TextView) findViewById(R.id.tv_citydetail);
-        tv_datedetail = (TextView) findViewById(R.id.tv_datedetail);
-        tv_descriptiondetail = (TextView) findViewById(R.id.tv_descriptiondetail);
+        tv_titledetail = (TextView)findViewById(R.id.tv_details_moment_title);
+        tv_placedetail = (TextView)findViewById(R.id.tv_details_moment_place);
+        tv_datedetail = (TextView) findViewById(R.id.tv_details_moment_date);
+        tv_narrativedetail = (TextView) findViewById(R.id.tv_details_moment_narrative);
+
+        tv_latdetail = (TextView) findViewById(R.id.tv_details_moment_lat);
+        tv_londetail = (TextView) findViewById(R.id.tv_details_moment_lon);
 
         _id_moment = intent.getStringExtra("_id");
         tv_titledetail.setText(intent.getStringExtra("title"));
-        tv_countrydetail.setText(intent.getStringExtra("country"));
-        tv_citydetail.setText(intent.getStringExtra("city"));
-        tv_datedetail.setText(intent.getStringExtra("date"));
-        tv_descriptiondetail.setText(intent.getStringExtra("description"));
-
+        tv_placedetail.setText(intent.getStringExtra("place"));
+        tv_narrativedetail.setText(intent.getStringExtra("narrative"));
+        tv_latdetail.setText(intent.getStringExtra("lat"));
+        tv_londetail.setText(intent.getStringExtra("lon"));
+        userName = intent.getStringExtra("userName");
+        userEmail = intent.getStringExtra("userEmail");
+        strTripID = intent.getStringExtra("trip");
+        strOriginalName = intent.getStringExtra("originalname");
         btn_class_1 = (Button) findViewById(R.id.btn_class_1);
         btn_class_2 = (Button) findViewById(R.id.btn_class_2);
         btn_class_3 = (Button) findViewById(R.id.btn_class_3);
 
-        lv_momments    = (ListView) findViewById(R.id.lv_momments);
+        iv_details_img_moment    = (ImageView) findViewById(R.id.iv_details_img_moment);
 
-        entryDetailsMomentList = new ArrayList<>();
 
-        adapter = new MomentsAdapter(entryDetailsMomentList, getApplicationContext());
+        try {
 
-        lv_momments.setAdapter(adapter);
+            String DATE_FORMAT_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+            String reformattedStr = new SimpleDateFormat("dd MMMM yyyy").format(new SimpleDateFormat(DATE_FORMAT_PATTERN).parse(intent.getStringExtra("moment_date")));
+            tv_datedetail.setText(reformattedStr);    // format output
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-        showMoments();
+        //entryDetailsMomentList = new ArrayList<>();
 
-        lv_momments.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        //adapter = new MomentsAdapter(entryDetailsMomentList, getApplicationContext());
+
+        //lv_moments_images.setAdapter(adapter);
+
+        //showMoments();
+
+        /*iv_details_img_moment.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int i, long id) {
                 goDetailMoment(i);
             }
-        });
+        });*/
+
+        //iv_details_img_moment.setImageResource(R.drawable.logo);
+
+        if (strOriginalName.isEmpty()) iv_details_img_moment.setImageResource(R.drawable.logo);
+        else new Utils.DownloadImageTask((ImageView) iv_details_img_moment.findViewById(R.id.iv_details_img_moment)).execute(MysocialEndpoints.MEDIA_URL + strOriginalName);
 
         //para editar a trip
         btn_editmomment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goAddMoment(intent);
+                goEditMoment(intent);
             }
         });
 
@@ -131,15 +152,18 @@ public class DetailMomentActivity extends AppCompatActivity {
     }
 
     //metodo para ir para a DetailTripActivity
-    protected void goDetailMoment(int i) {
-        Intent intent = new Intent(this, DetailMomentActivity.class);
-        intent.putExtra("_id", adapter.getItem(i).getId());
-        intent.putExtra("title", adapter.getItem(i).getTitle());
-        intent.putExtra("place", adapter.getItem(i).getPlace());
-        intent.putExtra("moment_date", adapter.getItem(i).getMomentDate());
-        intent.putExtra("narrative", adapter.getItem(i).getNarrative());
-        intent.putExtra("lat", adapter.getItem(i).getLat());
-        intent.putExtra("lon", adapter.getItem(i).getLon());
+    protected void goEditMoment(Intent i) {
+        Intent intent = new Intent(this, EditMommentActivity.class);
+        intent.putExtra("_id", i.getStringExtra("_id"));
+        intent.putExtra("title", i.getStringExtra("title"));
+        intent.putExtra("place", i.getStringExtra("place"));
+        intent.putExtra("moment_date", i.getStringExtra("moment_date"));
+        intent.putExtra("narrative", i.getStringExtra("narrative"));
+        intent.putExtra("lat", i.getStringExtra("lat"));
+        intent.putExtra("lon", i.getStringExtra("lon"));
+        intent.putExtra("originalname", i.getStringExtra("originalname"));
+        intent.putExtra("userName", userName);
+        intent.putExtra("userEmail", userEmail);
         startActivity(intent);
     }
 
@@ -178,7 +202,7 @@ public class DetailMomentActivity extends AppCompatActivity {
     protected void classifMoments(final int value){
         MysocialEndpoints api = MysocialEndpoints.retrofit.create(MysocialEndpoints.class);
         Call<AnwserMoment> call = api.getClassifMoments(
-                _id_moment, value, "ernestonet@msn.com", "Ernesto Casanova"
+                _id_moment, value, userEmail, userName
         );
         call.enqueue(new Callback<AnwserMoment>() {
 

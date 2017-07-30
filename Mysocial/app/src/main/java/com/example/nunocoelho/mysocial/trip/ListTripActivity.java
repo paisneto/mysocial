@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -43,12 +44,12 @@ public class ListTripActivity extends AppCompatActivity
    // private Class lastActivity;
     private TextView tv_title, tv_country,tv_res;
     private ListView lv_trips;
-    private  String output;
+    private String output;
     private ArrayList<EntryDetails> entryDetailsList;
     private ProgressBar spinner;
     public Toolbar toolbar;
     private ArrayList<Markers> listMarkers = new ArrayList<Markers>();
-
+    private String userName = "", userEmail = "", photoUrl = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +59,33 @@ public class ListTripActivity extends AppCompatActivity
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.tv_title_header);
+
+        final Intent intent = getIntent();
+        userName             = intent.getStringExtra("userName");
+        userEmail             = intent.getStringExtra("userEmail");
+        photoUrl = intent.getStringExtra("photoUrl");
+
+
+
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+        View header=navigationView.getHeaderView(0);
+        ImageView iv_photo = (ImageView)header.findViewById(R.id.iv_photo);
+        TextView tv_name = (TextView)header.findViewById(R.id.tv_name);
+        TextView tv_email = (TextView)header.findViewById(R.id.tv_email);
+        tv_name.setText(userName);
+        tv_email.setText(userEmail);
+
+        if (photoUrl == null) iv_photo.setImageResource(R.drawable.logo);
+        else new Utils.DownloadImageTask((ImageView) iv_photo.findViewById(R.id.nav_view)).execute(MysocialEndpoints.MEDIA_URL + photoUrl);
+
+//        name = (TextView)header.findViewById(R.id.tv_name);
+//        email = (TextView)header.findViewById(R.id.tv_email);
+
+
+
+
 
         tv_title    = (TextView) findViewById(R.id.tv_title);
         tv_country  = (TextView)findViewById(R.id.tv_country);
@@ -96,16 +124,8 @@ public class ListTripActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
-
-
-       /* NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-
-        MenuItem btnFacebookLogout = navigationView.getMenu().findItem(R.id.nav_send);
-        btnFacebookLogout.setOnMenuItemClickListener();*/
-
+//        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+//        navigationView.setNavigationItemSelectedListener(this);
     }
 
     //metodo para voltar para a LoginActivity
@@ -123,12 +143,16 @@ public class ListTripActivity extends AppCompatActivity
         intent.putExtra("date", adapter.getItem(i).getDate());
         intent.putExtra("description", adapter.getItem(i).getDescription());
         intent.putExtra("originalname", adapter.getItem(i).getFilename());
+        intent.putExtra("userName", userName);
+        intent.putExtra("userEmail", userEmail);
         startActivity(intent);
     }
 
     //metodo para ir para a AddTripActivity
     protected void goAddTrip(){
         Intent intent = new Intent(this, AddTripActivity.class);
+        intent.putExtra("userName", userName);
+        intent.putExtra("userEmail", userEmail);
         startActivity(intent);
     }
 
@@ -137,15 +161,8 @@ public class ListTripActivity extends AppCompatActivity
         final Dialog progress_spinner = Utils.LoadingSpinner(this);
         progress_spinner.show();
 
-        String limit, page, number, sort, title;
-
-        limit = "500"; page = "1"; number = "100"; sort = "-created"; title = "";
-
         MysocialEndpoints api = MysocialEndpoints.retrofit.create(MysocialEndpoints.class);
-        Call<Anwser> call = api.getAllTrips(
-                //limit, page, number, sort, title//last one the search field name
-                //title
-                );
+        Call<Anwser> call = api.getAllTrips(userEmail);
         call.enqueue(new Callback<Anwser>() {
 
             @Override
