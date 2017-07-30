@@ -214,7 +214,7 @@ public class DetailMomentActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.layout, menu);
+        getMenuInflater().inflate(R.menu.layout_main, menu);
 
         return true;
     }
@@ -222,9 +222,10 @@ public class DetailMomentActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_settings:
+            case R.id.action_home:
                 // User chose the "Settings" item, show the app settings UI...
-                return true;
+               Intent intent_home = new Intent(this, ListTripActivity.class);
+               startActivity(intent_home);
 
             case R.id.action_markers:
                 // User chose the "Favorite" action, mark the current item

@@ -9,13 +9,13 @@
         android:title="@string/action_favorite"
         app:showAsAction="ifRoom"/>
 
-    <!-- Settings, should always be in the overflow -->
-    <item android:id="@+id/action_settings"
-        android:title="@string/action_settings"
-        app:showAsAction="never"/>
+    <!--&lt;!&ndash; Settings, should always be in the overflow &ndash;&gt;-->
+    <!--<item android:id="@+id/action_settings"-->
+        <!--android:title="@string/action_settings"-->
+        <!--app:showAsAction="never"/>-->
 
-    <item
-        android:id="@+id/logout"
-        android:title="@string/logout"
-        app:showAsAction="never" />
+    <!--<item-->
+        <!--android:id="@+id/logout"-->
+        <!--android:title="@string/logout"-->
+        <!--app:showAsAction="never" />-->
 </menu>
