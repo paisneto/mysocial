@@ -1,6 +1,7 @@
 package com.example.nunocoelho.mysocial.trip;
 
 import android.app.Dialog;
+import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -9,6 +10,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -38,6 +40,7 @@ public class ListTripActivity extends AppCompatActivity
      implements NavigationView.OnNavigationItemSelectedListener {
 
     //declaração das variaveis
+    SearchView searchView = null;
     private static DetailTripAdapter adapter;
     private Button btn_search;
     private FloatingActionButton btn_addtrip, btn_listtrips_marker;
@@ -49,7 +52,7 @@ public class ListTripActivity extends AppCompatActivity
     private ProgressBar spinner;
     public Toolbar toolbar;
     private ArrayList<Markers> listMarkers = new ArrayList<Markers>();
-    private String userName = "", userEmail = "", photoUrl = "";
+    private String userName = "", userEmail = "", photoUrl = "", searchText = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -159,7 +162,7 @@ public class ListTripActivity extends AppCompatActivity
         progress_spinner.show();
 
         MysocialEndpoints api = MysocialEndpoints.retrofit.create(MysocialEndpoints.class);
-        Call<Anwser> call = api.getAllTrips(userEmail);
+        Call<Anwser> call = api.getAllTrips(userEmail, searchText);
         call.enqueue(new Callback<Anwser>() {
 
             @Override
@@ -173,6 +176,7 @@ public class ListTripActivity extends AppCompatActivity
                         }
                         adapter.notifyDataSetChanged();
                         adapter.notifyDataSetInvalidated();
+                        searchText = "";
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -204,7 +208,40 @@ public class ListTripActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+
+
+        // Associate searchable configuration with the SearchView
+        searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                searchText = query;
+                showTrips();
+                //Toast.makeText(ListTripActivity.this, "onQueryTextSubmit!", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (newText.length() > 3) {
+                    //searchText = newText;
+                    //showTrips();
+                    //Toast.makeText(ListTripActivity.this, "onQueryTextChange!", Toast.LENGTH_SHORT).show();
+                }
+                return false;
+            }
+        });
+
         return true;
+    }
+
+    private void handleIntent(Intent intent) {
+
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            //use the query to search your data somehow
+        }
     }
 
     @Override
@@ -214,16 +251,12 @@ public class ListTripActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         //int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        /*if (id == R.id.action_settings) {
-            return true;
-        }*/
         Intent intent;
         switch (item.getItemId()) {
            case R.id.action_search:
-               Toast.makeText(ListTripActivity.this, "Error - Loading data!", Toast.LENGTH_SHORT).show();
-              // intent = new Intent(this, SearchTripActivity.class);
-              // startActivity(intent);
+               //Toast.makeText(ListTripActivity.this, "Error - Loading data!", Toast.LENGTH_SHORT).show();
+               intent = new Intent(this, SearchTripActivity.class);
+               startActivity(intent);
                return true;
             case R.id.action_markers:
                 try {

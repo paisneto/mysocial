@@ -75,7 +75,7 @@ public interface MysocialEndpoints {
     //
     @GET("trips/?limit=500&page=1&number=100&sort=-created")//&title={title}")
     Call<Anwser> getAllTrips(
-            @Query("postedByEmail") String postedByEmail
+            @Query("postedByEmail") String postedByEmail, @Query("title") String title
             //@Path("limit") String limit,
             //@Path("page") String page,
             //@Path("number") String number,
