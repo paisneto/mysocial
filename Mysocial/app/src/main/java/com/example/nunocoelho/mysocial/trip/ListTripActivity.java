@@ -8,6 +8,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
@@ -41,6 +42,7 @@ public class ListTripActivity extends AppCompatActivity
 
     //declaração das variaveis
     SearchView searchView = null;
+    private SwipeRefreshLayout swipeContainer;
     private static DetailTripAdapter adapter;
     private Button btn_search;
     private FloatingActionButton btn_addtrip, btn_listtrips_marker;
@@ -69,6 +71,14 @@ public class ListTripActivity extends AppCompatActivity
         photoUrl = intent.getStringExtra("photoUrl");
 
 
+        swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
+        // Setup refresh listener which triggers new data loading
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                showTrips();
+            }
+        });
 
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -123,9 +133,6 @@ public class ListTripActivity extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-//
-//       NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-//        navigationView.setNavigationItemSelectedListener(this);
     }
 
     //metodo para voltar para a LoginActivity
@@ -177,6 +184,7 @@ public class ListTripActivity extends AppCompatActivity
                         adapter.notifyDataSetChanged();
                         adapter.notifyDataSetInvalidated();
                         searchText = "";
+                        swipeContainer.setRefreshing(false);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
