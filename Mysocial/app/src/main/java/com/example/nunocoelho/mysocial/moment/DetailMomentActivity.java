@@ -112,7 +112,7 @@ public class DetailMomentActivity extends AppCompatActivity {
         btn_editmomment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goAddMoment(intent);
+                goEditMoment(intent);
             }
         });
 
@@ -152,15 +152,18 @@ public class DetailMomentActivity extends AppCompatActivity {
     }
 
     //metodo para ir para a DetailTripActivity
-    protected void goDetailMoment(int i) {
-        Intent intent = new Intent(this, DetailMomentActivity.class);
-        intent.putExtra("_id", adapter.getItem(i).getId());
-        intent.putExtra("title", adapter.getItem(i).getTitle());
-        intent.putExtra("place", adapter.getItem(i).getPlace());
-        intent.putExtra("moment_date", adapter.getItem(i).getMomentDate());
-        intent.putExtra("narrative", adapter.getItem(i).getNarrative());
-        intent.putExtra("lat", adapter.getItem(i).getLat());
-        intent.putExtra("lon", adapter.getItem(i).getLon());
+    protected void goEditMoment(Intent i) {
+        Intent intent = new Intent(this, EditMommentActivity.class);
+        intent.putExtra("_id", i.getStringExtra("_id"));
+        intent.putExtra("title", i.getStringExtra("title"));
+        intent.putExtra("place", i.getStringExtra("place"));
+        intent.putExtra("moment_date", i.getStringExtra("moment_date"));
+        intent.putExtra("narrative", i.getStringExtra("narrative"));
+        intent.putExtra("lat", i.getStringExtra("lat"));
+        intent.putExtra("lon", i.getStringExtra("lon"));
+        intent.putExtra("originalname", i.getStringExtra("originalname"));
+        intent.putExtra("userName", userName);
+        intent.putExtra("userEmail", userEmail);
         startActivity(intent);
     }
 

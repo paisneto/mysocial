@@ -78,7 +78,7 @@
                         android:orientation="horizontal">
 
                         <ImageView
-                            android:id="@+id/iv_details_moment"
+                            android:id="@+id/iv_details_title_moment"
                             android:layout_width="@dimen/spacing_mlarge"
                             android:layout_height="@dimen/spacing_mlarge"
                             android:layout_margin="@dimen/spacing_middle"
@@ -279,8 +279,9 @@
                         android:id="@+id/iv_details_img_moment"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_alignParentLeft="true"
-                        android:scaleType="fitXY" />
+                        android:scaleType="fitXY"
+                        android:maxHeight="100dp"
+                        tools:ignore="ContentDescription" />
 
                 </LinearLayout>
             </android.support.v7.widget.CardView>
