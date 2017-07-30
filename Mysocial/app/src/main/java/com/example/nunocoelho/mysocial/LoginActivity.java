@@ -2,9 +2,15 @@ package com.example.nunocoelho.mysocial;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.TextView;
+
+import android.support.design.widget.NavigationView;
 
 import com.example.nunocoelho.mysocial.login.Details;
 import com.example.nunocoelho.mysocial.mysocialapi.MysocialEndpoints;
@@ -42,6 +48,8 @@ public class LoginActivity extends AppCompatActivity {
     EditText tv_username, tv_password;
     public final static String EXTRA_MESSAGE = "com.example.nunocoelho.mysocial.MESSAGE";
 
+
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -51,12 +59,9 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.login);
         Realm.init(getApplicationContext());
         final Intent intent = getIntent();
-
-
 
         String logOut = intent.getStringExtra("kill_user");
 
@@ -127,22 +132,31 @@ public class LoginActivity extends AppCompatActivity {
             loadProfile(user);
         }
 
-      //  return view;
     }
 
 
     private void loadProfile(Details user){
-        
-//       TextView tv_name = (TextView)view.findViewById(R.id.tv_name);
-//       TextView tv_email = (TextView)view.findViewById(R.id.tv_email);
-//       ImageView iv_photo = (ImageView)view.findViewById(R.id.iv_photo);
+
+
+      TextView tv_name = (TextView)findViewById(R.id.tv_name);
+   //    TextView tv_email = (TextView)findViewById(R.id.tv_email);
+     // ImageView iv_photo = (ImageView)view.findViewById(R.id.iv_photo);
 //
+       // final String email = user.getEmail().toString();
+       // final String oauthID = user.getOauthID().toString();
+       // final String token = user.getToken().toString();
+        final String name = user.getName();
+      //  final String first_name = user.getFirstName();
+      //  final String photoUrl = user.getPhotoUri();
+
+
         //Picasso.with(fragmentContext).load(user.getPhotoUri()).into(iv_photo);
-//        tv_name.setText(user.getFirstName()+" "+user.getLastName());
-//        tv_email.setText(user.getEmail());
+        tv_name.setText(name);
+       // tv_email.setText("aasads@asas.com");
 
 
         goListTripActivity();
+
     }
 
 
@@ -248,7 +262,9 @@ public class LoginActivity extends AppCompatActivity {
                 if(response.code()==200){
                     Details user = response.body();
                     saveToRealm(user);
+                    loadProfile(user);
                     goListTripActivity();
+
                 }
             }
             @Override
@@ -280,7 +296,9 @@ public class LoginActivity extends AppCompatActivity {
                 if(response.code() == 200){
                     Details user = response.body();
                     saveToRealm(user);
+                    loadProfile(user);
                     goListTripActivity();
+
                 }
 
             }
