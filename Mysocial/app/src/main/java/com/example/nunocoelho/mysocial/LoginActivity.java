@@ -1,17 +1,12 @@
 package com.example.nunocoelho.mysocial;
 
+import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.widget.DrawerLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
-
-import android.support.design.widget.NavigationView;
 
 import com.example.nunocoelho.mysocial.helpers.Utils;
 import com.example.nunocoelho.mysocial.login.Details;
@@ -68,6 +63,21 @@ public class LoginActivity extends AppCompatActivity {
         final Intent intent = getIntent();
 
         String logOut = intent.getStringExtra("kill_user");
+
+        int PERMISSION_ALL = 1;
+        String[] PERMISSIONS = {
+                Manifest.permission.CAMERA,
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.RECORD_AUDIO,
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+
+        };
+
+        if(!Utils.hasPermissions(this, PERMISSIONS)){
+            ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
+        }
 
         callbackManager = CallbackManager.Factory.create();
         LoginButton loginButton = (LoginButton)findViewById(R.id.login_button);

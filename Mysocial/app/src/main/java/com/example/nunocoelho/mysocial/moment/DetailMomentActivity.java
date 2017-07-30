@@ -144,6 +144,7 @@ public class DetailMomentActivity extends AppCompatActivity {
         intent.putExtra("narrative", i.getStringExtra("narrative"));
         intent.putExtra("lat", i.getStringExtra("lat"));
         intent.putExtra("lon", i.getStringExtra("lon"));
+        intent.putExtra("trip", i.getStringExtra("trip"));
         intent.putExtra("originalname", i.getStringExtra("originalname"));
         intent.putExtra("userName", userName);
         intent.putExtra("userEmail", userEmail);

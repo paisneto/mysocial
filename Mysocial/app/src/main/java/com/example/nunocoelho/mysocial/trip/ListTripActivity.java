@@ -228,8 +228,9 @@ public class ListTripActivity extends AppCompatActivity
         Intent intent;
         switch (item.getItemId()) {
            case R.id.action_settings:
-               intent = new Intent(this, SearchTripActivity.class);
-               startActivity(intent);
+               Toast.makeText(ListTripActivity.this, "Error - Loading data!", Toast.LENGTH_SHORT).show();
+              // intent = new Intent(this, SearchTripActivity.class);
+              // startActivity(intent);
                return true;
             case R.id.action_markers:
                 try {

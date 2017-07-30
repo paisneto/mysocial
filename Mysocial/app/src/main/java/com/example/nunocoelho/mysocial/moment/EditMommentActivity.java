@@ -3,8 +3,13 @@ package com.example.nunocoelho.mysocial.moment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,9 +29,11 @@ public class EditMommentActivity extends AppCompatActivity {
 
     private static MomentsAdapter adapter;
     private ListView lv_comments;
+    private Button btn_expand;
     private TextView tv_titledetail, tv_placedetail, tv_datedetail, tv_narrativedetail, tv_latdetail,  tv_londetail;
     private String _id_moment, strTripID, strOriginalName, userName, userEmail;
     private ArrayList<EntryDetailsMoment> entryDetailsMomentList;
+    private FloatingActionButton btn_save_comment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +56,15 @@ public class EditMommentActivity extends AppCompatActivity {
         tv_titledetail.setText(intent.getStringExtra("title"));
         tv_placedetail.setText(intent.getStringExtra("place"));
         tv_narrativedetail.setText(intent.getStringExtra("narrative"));
+
+        LinearLayout ll_comment_edit = (LinearLayout) findViewById(R.id.ll_comment_edit);
+        btn_save_comment = (FloatingActionButton)findViewById(R.id.btn_save_comment);
+
+        btn_expand = (Button) findViewById(R.id.btn_expand);
+
+        View panel = findViewById(R.id.ll_comment_edit);
+        panel.setVisibility(View.GONE);
+
         try {
 
             String DATE_FORMAT_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
@@ -74,6 +90,34 @@ public class EditMommentActivity extends AppCompatActivity {
         lv_comments.setAdapter(adapter);
 
         showMoments();
+
+        lv_comments.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int i, long id) {
+                //goDetailMoment(i);
+            }
+        });
+
+
+        btn_save_comment.setOnClickListener(new View.OnClickListener(
+        ) {
+            @Override
+            public void onClick(View v) {
+                View panel = findViewById(R.id.ll_comment_edit);
+                panel.setVisibility(View.VISIBLE);
+
+            }
+        });
+
+        btn_expand.setOnClickListener(new View.OnClickListener(
+        ) {
+            @Override
+            public void onClick(View v) {
+                View panel = findViewById(R.id.ll_comment_edit);
+                panel.setVisibility(View.VISIBLE);
+
+            }
+        });
     }
 
 

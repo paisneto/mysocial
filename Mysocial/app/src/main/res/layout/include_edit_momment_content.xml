@@ -27,7 +27,7 @@
             android:padding="@dimen/spacing_xsmall">
 
             <LinearLayout
-                android:id="@+id/lyt_distance"
+                android:id="@+id/ll_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?attr/selectableItemBackground"
@@ -56,8 +56,14 @@
 
             </LinearLayout>
 
+            <Button
+                android:id="@+id/btn_expand"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Button" />
+
             <LinearLayout
-                android:id="@+id/lyt_address"
+                android:id="@+id/ll_address"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?attr/selectableItemBackground"
@@ -85,7 +91,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/lyt_phone"
+                android:id="@+id/ll_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?attr/selectableItemBackground"
@@ -113,9 +119,9 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/lyt_website"
+                android:id="@+id/ll_narrative"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:background="?attr/selectableItemBackground"
                 android:gravity="center_vertical"
                 android:minHeight="@dimen/spacing_xsmall"
@@ -137,6 +143,34 @@
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                     android:textColor="@color/material_grey_800"
                     tools:ignore="PrivateResource" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_comment_edit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
+                android:gravity="center_vertical"
+                android:minHeight="@dimen/spacing_xsmall"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="@dimen/spacing_mlarge"
+                    android:layout_height="@dimen/spacing_mlarge"
+                    android:layout_margin="@dimen/spacing_middle"
+                    android:src="@drawable/ic_insert_comment_black_24dp"
+                    android:tint="@color/material_grey_800"
+                    tools:ignore="ContentDescription,PrivateResource" />
+
+                <EditText
+                    android:id="@+id/et_comment_add"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/spacing_medium"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    android:textColor="@color/material_grey_800"
+                    tools:ignore="LabelFor,PrivateResource,TextFields" />
 
             </LinearLayout>
 
