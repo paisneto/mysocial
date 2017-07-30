@@ -259,34 +259,6 @@
 
             </android.support.v7.widget.CardView>
 
-            <android.support.v7.widget.CardView
-                android:id="@+id/cv_moment_default_img"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="8dp"
-                android:layout_marginLeft="0dp"
-                android:layout_marginRight="0dp"
-                android:layout_marginTop="4dp"
-                android:minHeight="0dp"
-                android:maxHeight="150dp"
-                app:cardCornerRadius="@dimen/card_corner_radius"
-                app:cardElevation="@dimen/elevation_card">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:id="@+id/iv_details_img_moment"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:scaleType="fitXY"
-                        tools:ignore="ContentDescription" />
-
-                </LinearLayout>
-            </android.support.v7.widget.CardView>
-
             <LinearLayout
                 android:id="@+id/ll_class"
                 android:layout_width="match_parent"
@@ -354,6 +326,34 @@
                         tools:ignore="SmallSp" />
                 </RadioGroup>
             </LinearLayout>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/cv_moment_default_img"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="0dp"
+                android:layout_marginRight="0dp"
+                android:layout_marginTop="4dp"
+                android:minHeight="0dp"
+                android:maxHeight="150dp"
+                app:cardCornerRadius="@dimen/card_corner_radius"
+                app:cardElevation="@dimen/elevation_card">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/iv_details_img_moment"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="fitXY"
+                        tools:ignore="ContentDescription" />
+
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
 
         </LinearLayout>
     </ScrollView>
