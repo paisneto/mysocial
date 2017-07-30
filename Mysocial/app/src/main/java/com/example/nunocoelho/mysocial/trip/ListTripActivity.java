@@ -84,10 +84,6 @@ public class ListTripActivity extends AppCompatActivity
 //        name = (TextView)header.findViewById(R.id.tv_name);
 //        email = (TextView)header.findViewById(R.id.tv_email);
 
-
-
-
-
         tv_title    = (TextView) findViewById(R.id.tv_title);
         tv_country  = (TextView)findViewById(R.id.tv_country);
         btn_addtrip = (FloatingActionButton)findViewById(R.id.btn_addtrip);
@@ -191,9 +187,6 @@ public class ListTripActivity extends AppCompatActivity
                 Toast.makeText(ListTripActivity.this, "Error - Loading data!", Toast.LENGTH_SHORT).show();
             }
         });
-
-
-
     }
 
 
@@ -227,10 +220,10 @@ public class ListTripActivity extends AppCompatActivity
         }*/
         Intent intent;
         switch (item.getItemId()) {
-           case R.id.action_settings:
-               intent = new Intent(this, SearchTripActivity.class);
-               startActivity(intent);
-               return true;
+//           case R.id.action_settings:
+//               intent = new Intent(this, SearchTripActivity.class);
+//               startActivity(intent);
+//               return true;
             case R.id.action_markers:
                 try {
                     Intent intt = new Intent(this, MapsActivity.class);

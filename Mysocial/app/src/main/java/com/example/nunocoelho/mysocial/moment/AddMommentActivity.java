@@ -30,6 +30,7 @@ import com.example.nunocoelho.mysocial.R;
 import com.example.nunocoelho.mysocial.helpers.Utils;
 import com.example.nunocoelho.mysocial.mysocialapi.MysocialEndpoints;
 import com.example.nunocoelho.mysocial.trip.DetailTripActivity;
+import com.example.nunocoelho.mysocial.trip.ListTripActivity;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
@@ -368,7 +369,7 @@ public class AddMommentActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.layout, menu);
+        getMenuInflater().inflate(R.menu.layout_main, menu);
         return true;
     }
 
@@ -376,10 +377,15 @@ public class AddMommentActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent;
         switch (item.getItemId()) {
-            case R.id.logout:
-                intent = new Intent(this, LoginActivity.class);
-                intent.putExtra("kill_user", "yes");
-                startActivity(intent);
+            case R.id.action_home:
+                // User chose the "Settings" item, show the app settings UI...
+                Intent intent_home = new Intent(this, ListTripActivity.class);
+                startActivity(intent_home);
+
+//            case R.id.logout:
+//                intent = new Intent(this, LoginActivity.class);
+//                intent.putExtra("kill_user", "yes");
+//                startActivity(intent);
             default:
                 // If we got here, the user's action was not recognized.
                 // Invoke the superclass to handle it.

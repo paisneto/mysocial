@@ -73,5 +73,6 @@
     <string name="narrative">Narrative</string>
     <string name="place">Place</string>
     <string name="edit_moment">Edit Moment</string>
+    <string name="action_home">Home</string>
 
 </resources>
