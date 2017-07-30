@@ -41,7 +41,8 @@
                     android:layout_margin="@dimen/spacing_middle"
                     android:src="@drawable/ic_title_gray_24dp"
                     android:tint="@color/grey_mdark"
-                    android:contentDescription="" />
+                    android:contentDescription=""
+                    tools:ignore="ContentDescription" />
 
                 <TextView
                     android:id="@+id/tv_title"
@@ -49,7 +50,8 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/spacing_medium"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                    android:textColor="@color/material_grey_800" />
+                    android:textColor="@color/material_grey_800"
+                    tools:ignore="PrivateResource" />
 
             </LinearLayout>
 
@@ -67,7 +69,8 @@
                     android:layout_height="@dimen/spacing_mlarge"
                     android:layout_margin="@dimen/spacing_middle"
                     android:src="@drawable/ic_near_me_gray_24dp"
-                    android:tint="@color/material_grey_800" />
+                    android:tint="@color/material_grey_800"
+                    tools:ignore="ContentDescription,PrivateResource" />
 
                 <TextView
                     android:id="@+id/tv_address"
@@ -75,7 +78,8 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/spacing_medium"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                    android:textColor="@color/material_grey_800" />
+                    android:textColor="@color/material_grey_800"
+                    tools:ignore="PrivateResource" />
 
             </LinearLayout>
 
@@ -93,7 +97,8 @@
                     android:layout_height="@dimen/spacing_mlarge"
                     android:layout_margin="@dimen/spacing_middle"
                     android:src="@drawable/ic_date_range_gray_24dp"
-                    android:tint="@color/material_grey_800" />
+                    android:tint="@color/material_grey_800"
+                    tools:ignore="ContentDescription,PrivateResource" />
 
                 <TextView
                     android:id="@+id/tv_date"
@@ -101,7 +106,8 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/spacing_medium"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                    android:textColor="@color/material_grey_800" />
+                    android:textColor="@color/material_grey_800"
+                    tools:ignore="PrivateResource" />
 
             </LinearLayout>
 
@@ -119,7 +125,8 @@
                     android:layout_height="@dimen/spacing_mlarge"
                     android:layout_margin="@dimen/spacing_middle"
                     android:src="@drawable/ic_description_gray_24dp"
-                    android:tint="@color/material_grey_800" />
+                    android:tint="@color/material_grey_800"
+                    tools:ignore="ContentDescription,PrivateResource" />
 
                 <TextView
                     android:id="@+id/tv_description"
@@ -127,7 +134,8 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/spacing_medium"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                    android:textColor="@color/material_grey_800" />
+                    android:textColor="@color/material_grey_800"
+                    tools:ignore="PrivateResource" />
 
             </LinearLayout>
 
@@ -154,8 +162,8 @@
                 android:id="@+id/img_trip_default"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_alignParentLeft="true"
-                android:scaleType="fitXY" />
+                android:scaleType="fitXY"
+                tools:ignore="ContentDescription" />
 
         </LinearLayout>
     </android.support.v7.widget.CardView>

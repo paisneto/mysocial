@@ -365,6 +365,9 @@ public class DetailTripActivity extends AppCompatActivity {
             intent.putExtra("trip", adapter.getItem(i).getTrip());
             intent.putExtra("lat", adapter.getItem(i).getLat());
             intent.putExtra("lon", adapter.getItem(i).getLon());
+            intent.putExtra("originalname", adapter.getItem(i).getOriginalname());
+            intent.putExtra("userName", userName);
+            intent.putExtra("userEmail", userEmail);
             startActivity(intent);
         } catch (Exception e) {
             e.printStackTrace();
@@ -382,7 +385,6 @@ public class DetailTripActivity extends AppCompatActivity {
         intent.putExtra("date", i.getStringExtra("date"));
         intent.putExtra("description", i.getStringExtra("description"));
         intent.putExtra("originalname", i.getStringExtra("originalname"));
-
         intent.putExtra("userName", userName);
         intent.putExtra("userEmail", userEmail);
         startActivity(intent);
