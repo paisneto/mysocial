@@ -116,18 +116,16 @@ public class AddTripActivity extends AppCompatActivity {
             String DATE_FORMAT_PATTERN = "EEE MMM dd HH:mm:ss z yyyy";
             StringBuilder Date;
             @Override
-            public void onDateSet(DatePicker view, int year, int month,
-                                  int day) {
-                // TODO Auto-generated method stub
+            public void onDateSet(DatePicker view, int year, int month, int day) {
                 myCalendar.set(Calendar.YEAR, year);
                 myCalendar.set(Calendar.MONTH, month);
                 myCalendar.set(Calendar.DAY_OF_MONTH, day);
 
                 Date = new StringBuilder().append(year).append("-").append(month + 1).append("-").append(day).append(" ");
-                updateLabel();
+                updateTextView();
             }
 
-            private void updateLabel() {
+            private void updateTextView() {
                 tripDate = Date.toString();
                 String myViewFormat = "dd MMMM yyyy"; //In which you need put here
                 SimpleDateFormat sdf = new SimpleDateFormat(myViewFormat, Locale.ENGLISH);
