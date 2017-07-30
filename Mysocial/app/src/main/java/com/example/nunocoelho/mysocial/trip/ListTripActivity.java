@@ -48,7 +48,7 @@ public class ListTripActivity extends AppCompatActivity
     private ProgressBar spinner;
     public Toolbar toolbar;
     private ArrayList<Markers> listMarkers = new ArrayList<Markers>();
-
+    private String userName = "", userEmail = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +58,10 @@ public class ListTripActivity extends AppCompatActivity
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.tv_title_header);
+
+        final Intent intent = getIntent();
+        userName             = intent.getStringExtra("userName");
+        userEmail             = intent.getStringExtra("userEmail");
 
         tv_title    = (TextView) findViewById(R.id.tv_title);
         tv_country  = (TextView)findViewById(R.id.tv_country);
@@ -98,14 +102,6 @@ public class ListTripActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-
-
-       /* NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-
-        MenuItem btnFacebookLogout = navigationView.getMenu().findItem(R.id.nav_send);
-        btnFacebookLogout.setOnMenuItemClickListener();*/
-
     }
 
     //metodo para voltar para a LoginActivity
@@ -123,12 +119,16 @@ public class ListTripActivity extends AppCompatActivity
         intent.putExtra("date", adapter.getItem(i).getDate());
         intent.putExtra("description", adapter.getItem(i).getDescription());
         intent.putExtra("originalname", adapter.getItem(i).getFilename());
+        intent.putExtra("userName", userName);
+        intent.putExtra("userEmail", userEmail);
         startActivity(intent);
     }
 
     //metodo para ir para a AddTripActivity
     protected void goAddTrip(){
         Intent intent = new Intent(this, AddTripActivity.class);
+        intent.putExtra("userName", userName);
+        intent.putExtra("userEmail", userEmail);
         startActivity(intent);
     }
 
@@ -137,15 +137,8 @@ public class ListTripActivity extends AppCompatActivity
         final Dialog progress_spinner = Utils.LoadingSpinner(this);
         progress_spinner.show();
 
-        String limit, page, number, sort, title;
-
-        limit = "500"; page = "1"; number = "100"; sort = "-created"; title = "";
-
         MysocialEndpoints api = MysocialEndpoints.retrofit.create(MysocialEndpoints.class);
-        Call<Anwser> call = api.getAllTrips(
-                //limit, page, number, sort, title//last one the search field name
-                //title
-                );
+        Call<Anwser> call = api.getAllTrips(userEmail);
         call.enqueue(new Callback<Anwser>() {
 
             @Override

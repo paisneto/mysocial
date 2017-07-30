@@ -66,7 +66,7 @@ public class AddTripActivity extends AppCompatActivity {
     private EditText et_title,et_description,et_date;
     private TextView tv_result_country, tv_result_city, tv_result_lat, tv_result_lon;
     private ImageView iv_add_image_trip;
-    private String strTitle, strCountry, strCity, strLat, strLon, strDescription, strDate, strFilePath;
+    private String strTitle, strCountry, strCity, strLat, strLon, strDescription, strDate, strFilePath, userName, userEmail;
     private static final String IMAGE_DIRECTORY = "/demonuts";
     private int GALLERY = 1, CAMERA = 2, MARKER_PICKER_REQUEST = 3;
     private Bitmap imageBitmap;
@@ -100,6 +100,9 @@ public class AddTripActivity extends AppCompatActivity {
         et_description = (EditText)findViewById(R.id.et_description);
         et_date        = (EditText) findViewById(R.id.et_date);
 
+        final Intent intent = getIntent();
+        userName             = intent.getStringExtra("userName");
+        userEmail             = intent.getStringExtra("userEmail");
 
         myCalendar = Calendar.getInstance();
         et_date.setOnClickListener(new View.OnClickListener() {
@@ -157,7 +160,7 @@ public class AddTripActivity extends AppCompatActivity {
                             && !TextUtils.isEmpty(strLon)
                             && !TextUtils.isEmpty(strDescription)) {
                         try {
-                            loadFiles(strTitle, strCountry, strCity, strLat, strLon, strDescription, tripDate.toString());
+                            loadFiles(strTitle, strCountry, strCity, strLat, strLon, strDescription, tripDate.toString(), userName, userEmail);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -357,7 +360,7 @@ public class AddTripActivity extends AppCompatActivity {
     }
 
 
-    private void loadFiles(String _strTitle, String _strCountry, String _strCity, String _strLat, String _strLon, String _strDescription, String _myDate)
+    private void loadFiles(String _strTitle, String _strCountry, String _strCity, String _strLat, String _strLon, String _strDescription, String _myDate, String _userName, String _userEmail)
     {
         final Dialog progress_spinner = Utils.LoadingSpinner(AddTripActivity.this);
         progress_spinner.show();
@@ -406,8 +409,8 @@ public class AddTripActivity extends AppCompatActivity {
         RequestBody lon = RequestBody.create(okhttp3.MultipartBody.FORM, _strLon);
         RequestBody description = RequestBody.create(okhttp3.MultipartBody.FORM, _strDescription);
         RequestBody date = RequestBody.create(okhttp3.MultipartBody.FORM, _myDate);
-        RequestBody postedByName = RequestBody.create(okhttp3.MultipartBody.FORM, "Ernesto Casanova");
-        RequestBody postedByEmail = RequestBody.create(okhttp3.MultipartBody.FORM, "ernestonet@msn.com");
+        RequestBody postedByName = RequestBody.create(okhttp3.MultipartBody.FORM, _userName);
+        RequestBody postedByEmail = RequestBody.create(okhttp3.MultipartBody.FORM, _userEmail);
 
         Call<Anwser> call = api.addTrip(
                 title, country, city, lat, lon, description, date, postedByName, postedByEmail, body

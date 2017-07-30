@@ -40,6 +40,8 @@ public class LoginActivity extends AppCompatActivity {
     private View view;
     private LoginButton LoginButton;
     EditText tv_username, tv_password;
+    private String userName = "", userEmail = "";
+
     public final static String EXTRA_MESSAGE = "com.example.nunocoelho.mysocial.MESSAGE";
 
     @Override
@@ -55,8 +57,6 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.login);
         Realm.init(getApplicationContext());
         final Intent intent = getIntent();
-
-
 
         String logOut = intent.getStringExtra("kill_user");
 
@@ -132,7 +132,11 @@ public class LoginActivity extends AppCompatActivity {
 
 
     private void loadProfile(Details user){
-        
+
+        userName = user.getName();
+        userEmail = user.getEmail();
+
+       // Toast.makeText(LoginActivity.this, user.getEmail(), Toast.LENGTH_SHORT).show();
 //       TextView tv_name = (TextView)view.findViewById(R.id.tv_name);
 //       TextView tv_email = (TextView)view.findViewById(R.id.tv_email);
 //       ImageView iv_photo = (ImageView)view.findViewById(R.id.iv_photo);
@@ -156,8 +160,10 @@ public class LoginActivity extends AppCompatActivity {
                     public void onCompleted(JSONObject object, GraphResponse response) {
                         // Application code
                         try {
+                            userName = response.getJSONObject().getString("first_name")+" "+response.getJSONObject().getString("last_name");
+                            userEmail = response.getJSONObject().getString("email");
                             user.setEmail(response.getJSONObject().getString("email"));
-                            user.setName(response.getJSONObject().getString("first_name")+" "+response.getJSONObject().getString("last_name"));
+                            user.setName(userName);
                             user.setFirstName(response.getJSONObject().getString("first_name"));
                             user.setLastName(response.getJSONObject().getString("last_name"));
                             user.setGender(response.getJSONObject().getString("gender"));
@@ -229,10 +235,10 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void updateUser(Details user){
-        final String email = user.getEmail().toString();
+        final String email = userEmail = user.getEmail().toString();
         final String oauthID = user.getOauthID().toString();
         final String token = user.getToken().toString();
-        final String name = user.getName().toString();
+        final String name = userName = user.getName().toString();
         final String first_name = user.getFirstName().toString();
         final String last_name = user.getLastName().toString();
         final String username = user.getUsername().toString();
@@ -297,6 +303,8 @@ public class LoginActivity extends AppCompatActivity {
     protected void goListTripActivity(){
         Intent intent = new Intent(this, ListTripActivity.class);
         intent.putExtra(EXTRA_MESSAGE, "LoginActivity");
+        intent.putExtra("userName", userName);
+        intent.putExtra("userEmail", userEmail);
         startActivity(intent);
     }
     //metodo chamado para mudar para a RecoverPassActivity
