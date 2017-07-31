@@ -43,7 +43,6 @@ public class ListTripActivity extends AppCompatActivity
 
     //declaração das variaveis
     SearchView searchView = null;
-    private boolean isScroll = false;
     private SwipeRefreshLayout swipeContainer;
     private static DetailTripAdapter adapter;
     private Button btn_search;
@@ -100,7 +99,6 @@ public class ListTripActivity extends AppCompatActivity
                 ( new Handler()).postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        isScroll = true;
                         showTrips();
                         swipeContainer.setRefreshing(false);
                     }
@@ -194,7 +192,7 @@ public class ListTripActivity extends AppCompatActivity
     //metodo para carregar as viagens todoas
     protected void showTrips(){
         final Dialog progress_spinner = Utils.LoadingSpinner(this);
-        if(!isScroll) { progress_spinner.show(); }
+        progress_spinner.show();
         entryDetailsList.clear();
         MysocialEndpoints api = MysocialEndpoints.retrofit.create(MysocialEndpoints.class);
         Call<Anwser> call = api.getAllTrips(userEmail, searchText);
@@ -213,16 +211,17 @@ public class ListTripActivity extends AppCompatActivity
                         adapter.notifyDataSetChanged();
                         adapter.notifyDataSetInvalidated();
                     } catch (Exception e) {
+                        progress_spinner.dismiss();
                         e.printStackTrace();
                     }
-                    if(!isScroll) { progress_spinner.dismiss(); }
+                    progress_spinner.dismiss();
                 }
             }
 
             @Override
             public void onFailure(Call<Anwser> call, Throwable t) {
                 t.printStackTrace();
-                if(!isScroll) { progress_spinner.dismiss(); }
+                progress_spinner.dismiss();
                 Toast.makeText(ListTripActivity.this, "Error - Loading data!", Toast.LENGTH_SHORT).show();
             }
         });
