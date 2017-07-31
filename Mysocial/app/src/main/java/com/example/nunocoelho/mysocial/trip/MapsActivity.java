@@ -107,17 +107,8 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnMarke
         if (clickCount != null) {
             clickCount = clickCount + 1;
             marker.setTag(clickCount);
-            Toast.makeText(this,
-                    marker.getTitle() +
-                            " has been clicked " + clickCount + " times.",
-                    Toast.LENGTH_LONG).show();
-        } else {
-            Toast.makeText(this,
-                    marker.getTitle() +
-                            " has been clicked " + clickCount + " times. Position" + marker.getPosition(),
-                    Toast.LENGTH_LONG).show();
-        }
 
+        }
 
         // Return false to indicate that we have not consumed the event and that we wish
         // for the default behavior to occur (which is for the camera to move such that the
