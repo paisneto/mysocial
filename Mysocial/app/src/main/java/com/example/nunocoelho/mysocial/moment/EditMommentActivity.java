@@ -36,7 +36,6 @@ public class EditMommentActivity extends AppCompatActivity {
     private TextView tv_titledetail, tv_placedetail, tv_datedetail, tv_narrativedetail, tv_latdetail,  tv_londetail;
     private String _id_moment, strTripID, strOriginalName, userName, userEmail;
     private ArrayList<EntryDetailsMoment> entryDetailsMomentsList;
-    private ArrayList<EntryDetailsComments> entryDetailsCommentsList;
     private FloatingActionButton btn_save_comment;
 
     @Override
@@ -92,7 +91,6 @@ public class EditMommentActivity extends AppCompatActivity {
         lv_edit_comments    = (ListView) findViewById(R.id.lv_edit_comments);
 
         entryDetailsMomentsList = new ArrayList<>();
-        entryDetailsCommentsList = new ArrayList<>();
 
         adapter = new MomentCommentsAdapter(entryDetailsMomentsList, getApplicationContext());
 
