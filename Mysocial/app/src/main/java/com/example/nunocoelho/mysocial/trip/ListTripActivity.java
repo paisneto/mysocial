@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -76,13 +77,14 @@ public class ListTripActivity extends AppCompatActivity
 
         swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
         // Setup refresh listener which triggers new data loading
-        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        /*swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 isScroll = true;
-                showTrips();
+               // showTrips();
+                swipeContainer.setRefreshing(false);
             }
-        });
+        });*/
 
         // Configure the refreshing colors
         swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
@@ -90,6 +92,21 @@ public class ListTripActivity extends AppCompatActivity
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
 
+
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                swipeContainer.setRefreshing(true);
+                ( new Handler()).postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        isScroll = true;
+                        showTrips();
+                        swipeContainer.setRefreshing(false);
+                    }
+                }, 2000);
+            }
+        });
 
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -192,10 +209,9 @@ public class ListTripActivity extends AppCompatActivity
                             entryDetailsList.add(e);
                             listMarkers.add(new Markers(Double.valueOf(e.getLat()).doubleValue(), Double.valueOf(e.getLon()).doubleValue(), e.getCity()));
                         }
+                        searchText = "";
                         adapter.notifyDataSetChanged();
                         adapter.notifyDataSetInvalidated();
-                        searchText = "";
-                        if(isScroll) { swipeContainer.setRefreshing(false); }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

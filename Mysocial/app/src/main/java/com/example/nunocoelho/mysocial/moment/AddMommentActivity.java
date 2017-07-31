@@ -286,7 +286,7 @@ public class AddMommentActivity extends AppCompatActivity {
                 if(response.code() == 200) {
                     progress_spinner.dismiss();
 
-                    Toast.makeText(AddMommentActivity.this, "Trip Saved!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddMommentActivity.this, "Moment Saved!", Toast.LENGTH_SHORT).show();
                     goListMoments();
                     getClearAll();
                 } else  {

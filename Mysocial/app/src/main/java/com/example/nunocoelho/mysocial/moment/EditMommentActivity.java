@@ -12,7 +12,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -64,13 +63,7 @@ public class EditMommentActivity extends AppCompatActivity {
         tv_placedetail.setText(intent.getStringExtra("place"));
         tv_narrativedetail.setText(intent.getStringExtra("narrative"));
 
-        LinearLayout ll_comment_edit = (LinearLayout) findViewById(R.id.ll_comment_edit);
         btn_save_comment = (FloatingActionButton)findViewById(R.id.btn_save_comment);
-
-        //btn_expand = (Button) findViewById(R.id.btn_expand);
-
-        View panel = findViewById(R.id.ll_comment_edit);
-        panel.setVisibility(View.GONE);
 
         try {
 
@@ -112,7 +105,7 @@ public class EditMommentActivity extends AppCompatActivity {
                 AlertDialog.Builder alert = new AlertDialog.Builder(EditMommentActivity.this);
 
                 alert.setTitle("New Comment!");
-                alert.setMessage("Comment");
+                alert.setMessage(" ");
 
                 // Set an EditText view to get user input
                 final EditText input = new EditText(EditMommentActivity.this);
@@ -124,9 +117,8 @@ public class EditMommentActivity extends AppCompatActivity {
                         progress_spinner.show();
                         MysocialEndpoints api = MysocialEndpoints.retrofit.create(MysocialEndpoints.class);
                         Call<AnwserMoment> call = api.addCommentNew(
-                                //_id_moment
-                                "597e65f05380880004d43e65"
-                                , input.getText().toString(), "Ernesto Casanova", "ernestonet@msn.com"
+                                _id_moment.trim()
+                                , input.getText().toString(), userName, userEmail
                         );
 
                         call.enqueue(new Callback<AnwserMoment>() {
@@ -136,14 +128,14 @@ public class EditMommentActivity extends AppCompatActivity {
                                 if(response.code() == 200) {
                                     progress_spinner.dismiss();
 
-                                    Toast.makeText(EditMommentActivity.this, "Trip Saved!", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(EditMommentActivity.this, "Comment Saved!", Toast.LENGTH_SHORT).show();
                                 }
                             }
 
                             @Override
                             public void onFailure(Call<AnwserMoment> call, Throwable t) {
                                 progress_spinner.dismiss();
-                                Toast.makeText(EditMommentActivity.this, "Error Saving!", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(EditMommentActivity.this, "Comment Saved!", Toast.LENGTH_SHORT).show();
                                 t.printStackTrace();
                             }
                         });
