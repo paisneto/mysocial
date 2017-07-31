@@ -51,6 +51,9 @@ public class DetailMomentActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setTitle("Detail Moment");
 
+
+        if(!Utils.isNetworkConnected(DetailMomentActivity.this)) { Toast.makeText(DetailMomentActivity.this, "Error - No Network Connection!", Toast.LENGTH_SHORT).show(); finish(); }
+
         btn_editmomment = (FloatingActionButton) findViewById(R.id.btn_editmomment);
         //btn_back = (Button) findViewById(R.id.btn_back);
         //fab_search = (FloatingActionButton)findViewById(R.id.fab_search);

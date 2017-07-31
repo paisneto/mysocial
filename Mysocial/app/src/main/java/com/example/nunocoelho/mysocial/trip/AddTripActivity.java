@@ -80,6 +80,10 @@ public class AddTripActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setTitle("Add Trip");
 
+
+        if(!Utils.isNetworkConnected(AddTripActivity.this)) { Toast.makeText(AddTripActivity.this, "Error - No Network Connection!", Toast.LENGTH_SHORT).show(); finish(); }
+
+
         btn_addmomment = (Button) findViewById(R.id.btn_addmomment);
         //btn_back       = (Button) findViewById(R.id.btn_back);
         btn_save       = (Button) findViewById(R.id.btn_save);

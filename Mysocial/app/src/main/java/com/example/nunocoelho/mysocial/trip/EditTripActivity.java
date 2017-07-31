@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.nunocoelho.mysocial.R;
+import com.example.nunocoelho.mysocial.helpers.Utils;
 import com.example.nunocoelho.mysocial.moment.AddMommentActivity;
 import com.example.nunocoelho.mysocial.mysocialapi.MysocialEndpoints;
 
@@ -43,6 +44,10 @@ public class EditTripActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_trip);
+
+
+        if(!Utils.isNetworkConnected(EditTripActivity.this)) { Toast.makeText(EditTripActivity.this, "Error - No Network Connection!", Toast.LENGTH_SHORT).show(); finish(); }
+
 
         btn_addmomment = (Button) findViewById(R.id.btn_addmomment);
         btn_delete     = (Button) findViewById(R.id.btn_delete);

@@ -15,29 +15,226 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
         tools:ignore="MissingConstraints" />
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@+id/include3"
+        android:layout_height="0dp"
+        android:layout_marginBottom="3dp"
         android:layout_marginLeft="8dp"
-        app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginRight="8dp"
-        app:layout_constraintRight_toRightOf="parent">
+        android:layout_marginTop="10dp"
+        android:orientation="vertical"
+        android:padding="@dimen/spacing_xsmall"
+        app:layout_constraintBottom_toTopOf="@+id/include5"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/include3"
+        app:layout_constraintVertical_bias="0.666"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp">
 
         <LinearLayout
+            android:id="@+id/ll_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:background="?attr/selectableItemBackground"
+            android:gravity="center_vertical"
+            android:minHeight="@dimen/spacing_xsmall"
+            android:orientation="horizontal">
 
-            <include
-                layout="@layout/include_edit_momment_content"
+            <ImageView
+                android:id="@+id/imageView3"
+                android:layout_width="@dimen/spacing_mlarge"
+                android:layout_height="@dimen/spacing_mlarge"
+                android:layout_margin="@dimen/spacing_middle"
+                android:contentDescription=""
+                android:src="@drawable/ic_title_gray_24dp"
+                android:tint="@color/grey_mdark"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                android:id="@+id/tv_title_comment"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/spacing_medium"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:textColor="@color/material_grey_800"
+                tools:ignore="PrivateResource" />
+
         </LinearLayout>
-    </ScrollView>
+
+        <LinearLayout
+            android:id="@+id/ll_address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:gravity="center_vertical"
+            android:minHeight="@dimen/spacing_xsmall"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="@dimen/spacing_mlarge"
+                android:layout_height="@dimen/spacing_mlarge"
+                android:layout_margin="@dimen/spacing_middle"
+                android:src="@drawable/ic_near_me_gray_24dp"
+                android:tint="@color/material_grey_800"
+                tools:ignore="ContentDescription,PrivateResource" />
+
+            <TextView
+                android:id="@+id/tv_place_comment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/spacing_medium"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:textColor="@color/material_grey_800"
+                tools:ignore="PrivateResource" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:gravity="center_vertical"
+            android:minHeight="@dimen/spacing_xsmall"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="@dimen/spacing_mlarge"
+                android:layout_height="@dimen/spacing_mlarge"
+                android:layout_margin="@dimen/spacing_middle"
+                android:src="@drawable/ic_date_range_gray_24dp"
+                android:tint="@color/material_grey_800"
+                tools:ignore="ContentDescription,PrivateResource" />
+
+            <TextView
+                android:id="@+id/tv_date_comment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/spacing_medium"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:textColor="@color/material_grey_800"
+                tools:ignore="PrivateResource" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_narrative"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:gravity="center_vertical"
+            android:minHeight="@dimen/spacing_xsmall"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="@dimen/spacing_mlarge"
+                android:layout_height="@dimen/spacing_mlarge"
+                android:layout_margin="@dimen/spacing_middle"
+                android:src="@drawable/ic_description_gray_24dp"
+                android:tint="@color/material_grey_800"
+                tools:ignore="ContentDescription,PrivateResource" />
+
+            <TextView
+                android:id="@+id/tv_narrative_comment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/spacing_medium"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:textColor="@color/material_grey_800"
+                tools:ignore="PrivateResource" />
+
+        </LinearLayout>
+
+
+        <!-- <LinearLayout
+            android:id="@+id/ll_narrative"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?attr/selectableItemBackground"
+            android:gravity="center_vertical"
+            android:minHeight="@dimen/spacing_xsmall"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="@dimen/spacing_mlarge"
+                android:layout_height="@dimen/spacing_mlarge"
+                android:layout_margin="@dimen/spacing_middle"
+                android:src="@drawable/ic_description_gray_24dp"
+                android:tint="@color/material_grey_800"
+                tools:ignore="ContentDescription,PrivateResource" />
+
+            <TextView
+                android:id="@+id/tv_narrative_comment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/spacing_medium"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:textColor="@color/material_grey_800"
+                tools:ignore="PrivateResource" />
+
+        </LinearLayout>-->
+
+        <LinearLayout
+            android:id="@+id/ll_comment_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:gravity="center_vertical"
+            android:minHeight="@dimen/spacing_xsmall"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="@dimen/spacing_mlarge"
+                android:layout_height="@dimen/spacing_mlarge"
+                android:layout_margin="@dimen/spacing_middle"
+                android:src="@drawable/ic_insert_comment_black_24dp"
+                android:tint="@color/material_grey_800"
+                tools:ignore="ContentDescription,PrivateResource" />
+
+            <EditText
+                android:id="@+id/et_comment_add"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/spacing_medium"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:textColor="@color/material_grey_800"
+                tools:ignore="LabelFor,PrivateResource,TextFields" />
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_expand"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginBottom="41dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
+            android:text="Button"
+            app:layout_constraintBottom_toBottomOf="@+id/include2"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            tools:ignore="HardcodedText,MissingConstraints,UnknownId" />
+
+    </LinearLayout>
+
+    <include
+        android:id="@+id/include5"
+        layout="@layout/list_comments_layout"
+        android:layout_width="0dp"
+        android:layout_height="260dp"
+        android:layout_marginEnd="3dp"
+        android:layout_marginLeft="3dp"
+        android:layout_marginRight="3dp"
+        android:layout_marginStart="3dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

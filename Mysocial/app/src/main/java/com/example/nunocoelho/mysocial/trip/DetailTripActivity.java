@@ -80,6 +80,10 @@ public class DetailTripActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setTitle("Detail Trip");
 
+
+        if(!Utils.isNetworkConnected(DetailTripActivity.this)) { Toast.makeText(DetailTripActivity.this, "Error - No Network Connection!", Toast.LENGTH_SHORT).show(); finish(); }
+
+
         //addListenerOnButton();
 
         btn_addmomment = (FloatingActionButton) findViewById(R.id.btn_addmomment);

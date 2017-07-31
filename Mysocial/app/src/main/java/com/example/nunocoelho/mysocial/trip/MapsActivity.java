@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import com.example.nunocoelho.mysocial.R;
 import com.example.nunocoelho.mysocial.helpers.Markers;
+import com.example.nunocoelho.mysocial.helpers.Utils;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -37,6 +38,9 @@ public class MapsActivity extends AppCompatActivity implements GoogleMap.OnMarke
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setTitle("Markers");
+
+
+        if(!Utils.isNetworkConnected(MapsActivity.this)) { Toast.makeText(MapsActivity.this, "Error - No Network Connection!", Toast.LENGTH_SHORT).show(); finish(); }
 
 
         if(getIntent().hasExtra("EntryDetailsList")) try {

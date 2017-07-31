@@ -1,21 +1,25 @@
 package com.example.nunocoelho.mysocial.moment;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.nunocoelho.mysocial.R;
-import com.example.nunocoelho.mysocial.adapters.MomentsAdapter;
+import com.example.nunocoelho.mysocial.adapters.MomentCommentsAdapter;
+import com.example.nunocoelho.mysocial.helpers.Utils;
 import com.example.nunocoelho.mysocial.mysocialapi.MysocialEndpoints;
 
 import java.text.SimpleDateFormat;
@@ -27,12 +31,12 @@ import retrofit2.Response;
 
 public class EditMommentActivity extends AppCompatActivity {
 
-    private static MomentsAdapter adapter;
+    private static MomentCommentsAdapter adapter;
     private ListView lv_edit_comments;
-    private Button btn_expand;
     private TextView tv_titledetail, tv_placedetail, tv_datedetail, tv_narrativedetail, tv_latdetail,  tv_londetail;
     private String _id_moment, strTripID, strOriginalName, userName, userEmail;
-    private ArrayList<EntryDetailsMoment> entryDetailsMomentList;
+    private ArrayList<EntryDetailsMoment> entryDetailsMomentsList;
+    private ArrayList<EntryDetailsComments> entryDetailsCommentsList;
     private FloatingActionButton btn_save_comment;
 
     @Override
@@ -47,6 +51,10 @@ public class EditMommentActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setTitle("Edit Moment");
 
+
+        if(!Utils.isNetworkConnected(EditMommentActivity.this)) { Toast.makeText(EditMommentActivity.this, "Error - No Network Connection!", Toast.LENGTH_SHORT).show(); finish(); }
+
+
         tv_titledetail = (TextView)findViewById(R.id.tv_title_comment);
         tv_placedetail = (TextView)findViewById(R.id.tv_place_comment);
         tv_datedetail = (TextView) findViewById(R.id.tv_date_comment);
@@ -60,7 +68,7 @@ public class EditMommentActivity extends AppCompatActivity {
         LinearLayout ll_comment_edit = (LinearLayout) findViewById(R.id.ll_comment_edit);
         btn_save_comment = (FloatingActionButton)findViewById(R.id.btn_save_comment);
 
-        btn_expand = (Button) findViewById(R.id.btn_expand);
+        //btn_expand = (Button) findViewById(R.id.btn_expand);
 
         View panel = findViewById(R.id.ll_comment_edit);
         panel.setVisibility(View.GONE);
@@ -83,9 +91,10 @@ public class EditMommentActivity extends AppCompatActivity {
 
         lv_edit_comments    = (ListView) findViewById(R.id.lv_edit_comments);
 
-        entryDetailsMomentList = new ArrayList<>();
+        entryDetailsMomentsList = new ArrayList<>();
+        entryDetailsCommentsList = new ArrayList<>();
 
-        adapter = new MomentsAdapter(entryDetailsMomentList, getApplicationContext());
+        adapter = new MomentCommentsAdapter(entryDetailsMomentsList, getApplicationContext());
 
         lv_edit_comments.setAdapter(adapter);
 
@@ -102,19 +111,54 @@ public class EditMommentActivity extends AppCompatActivity {
         ) {
             @Override
             public void onClick(View v) {
-                View panel = findViewById(R.id.ll_comment_edit);
-                panel.setVisibility(View.VISIBLE);
+                AlertDialog.Builder alert = new AlertDialog.Builder(EditMommentActivity.this);
 
-            }
-        });
+                alert.setTitle("New Comment!");
+                alert.setMessage("Comment");
 
-        btn_expand.setOnClickListener(new View.OnClickListener(
-        ) {
-            @Override
-            public void onClick(View v) {
-                View panel = findViewById(R.id.ll_comment_edit);
-                panel.setVisibility(View.VISIBLE);
+                // Set an EditText view to get user input
+                final EditText input = new EditText(EditMommentActivity.this);
+                alert.setView(input);
 
+                alert.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        final Dialog progress_spinner = Utils.LoadingSpinner(EditMommentActivity.this);
+                        progress_spinner.show();
+                        MysocialEndpoints api = MysocialEndpoints.retrofit.create(MysocialEndpoints.class);
+                        Call<AnwserMoment> call = api.addCommentNew(
+                                //_id_moment
+                                "597e65f05380880004d43e65"
+                                , input.getText().toString(), "Ernesto Casanova", "ernestonet@msn.com"
+                        );
+
+                        call.enqueue(new Callback<AnwserMoment>() {
+
+                            @Override
+                            public void onResponse(Call<AnwserMoment> call, Response<AnwserMoment> response) {
+                                if(response.code() == 200) {
+                                    progress_spinner.dismiss();
+
+                                    Toast.makeText(EditMommentActivity.this, "Trip Saved!", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<AnwserMoment> call, Throwable t) {
+                                progress_spinner.dismiss();
+                                Toast.makeText(EditMommentActivity.this, "Error Saving!", Toast.LENGTH_SHORT).show();
+                                t.printStackTrace();
+                            }
+                        });
+                    }
+                });
+
+                alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        dialog.cancel();
+                    }
+                });
+
+                alert.show();
             }
         });
     }
@@ -132,9 +176,18 @@ public class EditMommentActivity extends AppCompatActivity {
             public void onResponse(Call<AnwserMoment> call, Response<AnwserMoment> response) {
                 if(response.code() == 200) {
                     AnwserMoment resp = response.body();
-                    for(EntryDetailsMoment e : resp.getEntradas()) {
-                        entryDetailsMomentList.add(e);
+
+
+                    try {
+
+                        for(EntryDetailsMoment e : resp.getEntradas()) {
+                            entryDetailsMomentsList.add(e);
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
+
                     adapter.notifyDataSetChanged();
                     adapter.notifyDataSetInvalidated();
                 } else {

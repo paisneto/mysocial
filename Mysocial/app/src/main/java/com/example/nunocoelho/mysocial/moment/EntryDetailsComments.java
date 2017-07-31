@@ -10,6 +10,17 @@ import java.util.List;
 
 public class EntryDetailsMoment {
 
+    /**Moments objects
+     "title": "Portugal",
+     "place": "Ipca",
+     "moment_date": "2017-11-30T00:00:00.000Z",
+     "narrative": "Go to Barcelos",
+     "lat": "41,5317",
+     "lon": "-8,6179",
+     "img": "buffer",
+     "created": "2017-11-30T00:00:00
+     * */
+
     @SerializedName("_id")
     private String id;
     private String title;

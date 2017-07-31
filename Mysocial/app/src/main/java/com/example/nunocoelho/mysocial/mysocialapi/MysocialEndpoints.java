@@ -142,6 +142,14 @@ public interface MysocialEndpoints {
             @Part MultipartBody.Part file
     );
 
+    @FormUrlEncoded
+    @PUT("moments/{id}/comments/")
+    Call<AnwserMoment> addCommentNew(
+            @Path("id") String id,
+            @Field("text") String text,
+            @Field("postedByEmail") String postedByEmail,
+            @Field("postedByName") String postedByName
+    );
 
     @FormUrlEncoded
     @POST("countries/country/")

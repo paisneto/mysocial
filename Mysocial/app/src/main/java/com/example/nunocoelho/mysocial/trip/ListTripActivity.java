@@ -42,6 +42,7 @@ public class ListTripActivity extends AppCompatActivity
 
     //declaração das variaveis
     SearchView searchView = null;
+    private boolean isScroll = false;
     private SwipeRefreshLayout swipeContainer;
     private static DetailTripAdapter adapter;
     private Button btn_search;
@@ -65,6 +66,8 @@ public class ListTripActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.tv_title_header);
 
+        if(!Utils.isNetworkConnected(ListTripActivity.this)) { Toast.makeText(ListTripActivity.this, "Error - No Network Connection!", Toast.LENGTH_SHORT).show(); finish(); }
+
         final Intent intent = getIntent();
         userName             = intent.getStringExtra("userName");
         userEmail             = intent.getStringExtra("userEmail");
@@ -76,6 +79,7 @@ public class ListTripActivity extends AppCompatActivity
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                isScroll = true;
                 showTrips();
             }
         });
@@ -173,7 +177,7 @@ public class ListTripActivity extends AppCompatActivity
     //metodo para carregar as viagens todoas
     protected void showTrips(){
         final Dialog progress_spinner = Utils.LoadingSpinner(this);
-        progress_spinner.show();
+        if(!isScroll) { progress_spinner.show(); }
         entryDetailsList.clear();
         MysocialEndpoints api = MysocialEndpoints.retrofit.create(MysocialEndpoints.class);
         Call<Anwser> call = api.getAllTrips(userEmail, searchText);
@@ -191,18 +195,18 @@ public class ListTripActivity extends AppCompatActivity
                         adapter.notifyDataSetChanged();
                         adapter.notifyDataSetInvalidated();
                         searchText = "";
-                        swipeContainer.setRefreshing(false);
+                        if(isScroll) { swipeContainer.setRefreshing(false); }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    progress_spinner.dismiss();
+                    if(!isScroll) { progress_spinner.dismiss(); }
                 }
             }
 
             @Override
             public void onFailure(Call<Anwser> call, Throwable t) {
                 t.printStackTrace();
-                progress_spinner.dismiss();
+                if(!isScroll) { progress_spinner.dismiss(); }
                 Toast.makeText(ListTripActivity.this, "Error - Loading data!", Toast.LENGTH_SHORT).show();
             }
         });

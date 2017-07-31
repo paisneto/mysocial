@@ -7,6 +7,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.nunocoelho.mysocial.helpers.Utils;
 import com.example.nunocoelho.mysocial.login.Details;
@@ -35,8 +36,7 @@ import retrofit2.Response;
 public class LoginActivity extends AppCompatActivity {
     //declaração das variaveis
     Realm realm = null;
-
-
+    int PERMISSION_ALL = 1;
     CallbackManager callbackManager;
     private AccessTokenTracker accessTokenTracker;
     private AccessToken accessToken;
@@ -64,12 +64,11 @@ public class LoginActivity extends AppCompatActivity {
 
         String logOut = intent.getStringExtra("kill_user");
 
-        int PERMISSION_ALL = 1;
+
         String[] PERMISSIONS = {
                 Manifest.permission.CAMERA,
                 Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.RECORD_AUDIO,
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
 
@@ -79,14 +78,16 @@ public class LoginActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
         }
 
-        callbackManager = CallbackManager.Factory.create();
-        LoginButton loginButton = (LoginButton)findViewById(R.id.login_button);
+        if(!Utils.isNetworkConnected(LoginActivity.this)) { Toast.makeText(LoginActivity.this, "Error - No Network Connection!", Toast.LENGTH_SHORT).show(); finish(); }
+
+            callbackManager = CallbackManager.Factory.create();
+            LoginButton loginButton = (LoginButton)findViewById(R.id.login_button);
         loginButton.setReadPermissions("email", "public_profile","user_birthday");
 
 
 
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-            Details newUser = new Details();
+                Details newUser = new Details();
 
             @Override
             public void onSuccess(LoginResult loginResult) {

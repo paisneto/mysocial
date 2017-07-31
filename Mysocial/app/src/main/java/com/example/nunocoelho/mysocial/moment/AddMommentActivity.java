@@ -25,7 +25,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.nunocoelho.mysocial.LoginActivity;
 import com.example.nunocoelho.mysocial.R;
 import com.example.nunocoelho.mysocial.helpers.Utils;
 import com.example.nunocoelho.mysocial.mysocialapi.MysocialEndpoints;
@@ -78,6 +77,10 @@ public class AddMommentActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setTitle("Add Moment");
+
+
+        if(!Utils.isNetworkConnected(AddMommentActivity.this)) { Toast.makeText(AddMommentActivity.this, "Error - No Network Connection!", Toast.LENGTH_SHORT).show(); finish(); }
+
 
         final Intent intent = getIntent();
         strTrip             = intent.getStringExtra("_id");//ID Trip from trip list
