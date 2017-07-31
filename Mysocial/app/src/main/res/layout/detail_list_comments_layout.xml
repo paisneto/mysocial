@@ -14,13 +14,12 @@
         android:layout_margin="8dp"
         android:background="@drawable/circle_drawable">
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/img_avatar"
+        <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/img_avatar_comments"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:src="@drawable/avatar_anon"
-            app:civ_border_width="0dp"/>
+            app:civ_border_width="0dp" />
     </FrameLayout>
 
     <LinearLayout
@@ -30,7 +29,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/tv_title"
+            android:id="@+id/tv_title_comment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
@@ -41,7 +40,7 @@
             tools:ignore="RtlHardcoded,RtlSymmetry" />
 
         <TextView
-            android:id="@+id/tv_country"
+            android:id="@+id/tv_my_comment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"

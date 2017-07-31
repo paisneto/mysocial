@@ -13,7 +13,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.nunocoelho.mysocial.R;
+import com.example.nunocoelho.mysocial.helpers.Utils;
 import com.example.nunocoelho.mysocial.moment.EntryDetailsMoment;
+import com.example.nunocoelho.mysocial.mysocialapi.MysocialEndpoints;
 
 import java.util.List;
 
@@ -46,7 +48,7 @@ public class MomentCommentsAdapter extends ArrayAdapter<EntryDetailsMoment> {
     public View getView(int i, View convertView, ViewGroup parent) {
 
         EntryDetailsMoment value = getItem(i);
-        TextView tv_title, tv_country;
+        TextView tv_title_comment, tv_my_comment;
         ImageView img_avatar;
 
         if (convertView == null){
@@ -54,22 +56,21 @@ public class MomentCommentsAdapter extends ArrayAdapter<EntryDetailsMoment> {
             convertView = inflater.inflate(R.layout.detail_list_comments_layout, null);
         }
 
-        tv_title = (TextView)convertView.findViewById(R.id.tv_title);
-        img_avatar = (ImageView)convertView.findViewById(R.id.img_avatar);
-        //tv_country = (TextView)convertView.findViewById(R.id.tv_country);
+        tv_title_comment = (TextView)convertView.findViewById(R.id.tv_title_comment);
+        img_avatar = (ImageView)convertView.findViewById(R.id.img_avatar_comments);
+        tv_my_comment = (TextView)convertView.findViewById(R.id.tv_my_comment);
 
 
 
         try {
-            //tv_title.setText(value.getEntradasComments().get(i).toString());
-            tv_title.setText(value.getTitle());
-            //tv_country.setText(value.getPlace());
+            tv_title_comment.setText(value.getTitle());
+            tv_my_comment.setText(value.getPlace());
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        //if (value.getOriginalname().isEmpty()) img_avatar.setImageResource(R.drawable.avatar_anon);
-        //else new Utils.DownloadImageTask((ImageView) convertView.findViewById(R.id.img_avatar)).execute(MysocialEndpoints.MEDIA_URL + value.getOriginalname());
+        if (value.getOriginalname().isEmpty()) img_avatar.setImageResource(R.drawable.avatar_anon);
+        else new Utils.DownloadImageTask((ImageView) convertView.findViewById(R.id.img_avatar)).execute(MysocialEndpoints.MEDIA_URL + value.getOriginalname());
         return convertView;
     }
 
