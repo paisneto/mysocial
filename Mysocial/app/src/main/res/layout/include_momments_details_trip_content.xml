@@ -43,6 +43,7 @@
             android:layout_marginRight="24dp"
             android:clickable="true"
             android:hint="Add Moment"
+            android:visibility="gone"
             app:backgroundTint="@color/colorPrimary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"

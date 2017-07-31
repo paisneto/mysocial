@@ -166,8 +166,6 @@ public class EditMommentActivity extends AppCompatActivity {
             public void onResponse(Call<AnwserMoment> call, Response<AnwserMoment> response) {
                 if(response.code() == 200) {
                     AnwserMoment resp = response.body();
-
-
                     try {
 
                         for(EntryDetailsMoment e : resp.getEntradas()) {
@@ -177,7 +175,6 @@ public class EditMommentActivity extends AppCompatActivity {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-
                     adapter.notifyDataSetChanged();
                     adapter.notifyDataSetInvalidated();
                 } else {

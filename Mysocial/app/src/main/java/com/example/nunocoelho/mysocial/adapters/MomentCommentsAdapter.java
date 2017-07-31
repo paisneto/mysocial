@@ -58,19 +58,19 @@ public class MomentCommentsAdapter extends ArrayAdapter<EntryDetailsMoment> {
 
         tv_title_comment = (TextView)convertView.findViewById(R.id.tv_title_comment);
         img_avatar = (ImageView)convertView.findViewById(R.id.img_avatar_comments);
-        tv_my_comment = (TextView)convertView.findViewById(R.id.tv_my_comment);
+        //tv_my_comment = (TextView)convertView.findViewById(R.id.tv_my_comment);
 
 
 
         try {
             tv_title_comment.setText(value.getTitle());
-            tv_my_comment.setText(value.getPlace());
+            //tv_my_comment.setText(value.getPlace());
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         if (value.getOriginalname().isEmpty()) img_avatar.setImageResource(R.drawable.avatar_anon);
-        else new Utils.DownloadImageTask((ImageView) convertView.findViewById(R.id.img_avatar)).execute(MysocialEndpoints.MEDIA_URL + value.getOriginalname());
+        else new Utils.DownloadImageTask((ImageView) convertView.findViewById(R.id.img_avatar_comments)).execute(MysocialEndpoints.MEDIA_URL + value.getOriginalname());
         return convertView;
     }
 
