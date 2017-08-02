@@ -34,7 +34,7 @@ public class EditMommentActivity extends AppCompatActivity {
     private ListView lv_edit_comments;
     private TextView tv_titledetail, tv_placedetail, tv_datedetail, tv_narrativedetail, tv_latdetail,  tv_londetail;
     private String _id_moment, strTripID, strOriginalName, userName, userEmail;
-    private ArrayList<EntryDetailsMoment> entryDetailsMomentsList;
+    private ArrayList<EntryDetailsComments> entryDetailsCommentsList;
     private FloatingActionButton btn_save_comment;
 
     @Override
@@ -83,9 +83,9 @@ public class EditMommentActivity extends AppCompatActivity {
 
         lv_edit_comments    = (ListView) findViewById(R.id.lv_edit_comments);
 
-        entryDetailsMomentsList = new ArrayList<>();
+        entryDetailsCommentsList = new ArrayList<>();
 
-        adapter = new MomentCommentsAdapter(entryDetailsMomentsList, getApplicationContext());
+        adapter = new MomentCommentsAdapter(entryDetailsCommentsList, getApplicationContext());
 
         lv_edit_comments.setAdapter(adapter);
 
@@ -157,21 +157,19 @@ public class EditMommentActivity extends AppCompatActivity {
     //metodo para carregar os moments de uma viagem
     protected void showMoments(){
         MysocialEndpoints api = MysocialEndpoints.retrofit.create(MysocialEndpoints.class);
-        Call<AnwserMoment> call = api.getMomentsTrip(
+        Call<AnwserListComments> call = api.getMomentComments(
                 strTripID
         );
-        call.enqueue(new Callback<AnwserMoment>() {
+        call.enqueue(new Callback<AnwserListComments>() {
 
             @Override
-            public void onResponse(Call<AnwserMoment> call, Response<AnwserMoment> response) {
+            public void onResponse(Call<AnwserListComments> call, Response<AnwserListComments> response) {
                 if(response.code() == 200) {
-                    AnwserMoment resp = response.body();
+                    AnwserListComments resp = response.body();
                     try {
-
-                        for(EntryDetailsMoment e : resp.getEntradas()) {
-                            entryDetailsMomentsList.add(e);
+                        for(EntryDetailsComments e : resp.getEntradas()) {
+                            entryDetailsCommentsList.add(e);
                         }
-
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -188,7 +186,7 @@ public class EditMommentActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<AnwserMoment> call, Throwable t) {
+            public void onFailure(Call<AnwserListComments> call, Throwable t) {
                 t.printStackTrace();
             }
         });

@@ -13,19 +13,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.nunocoelho.mysocial.R;
-import com.example.nunocoelho.mysocial.helpers.Utils;
-import com.example.nunocoelho.mysocial.moment.EntryDetailsMoment;
-import com.example.nunocoelho.mysocial.mysocialapi.MysocialEndpoints;
+import com.example.nunocoelho.mysocial.moment.EntryDetailsComments;
 
 import java.util.List;
 
-public class MomentCommentsAdapter extends ArrayAdapter<EntryDetailsMoment> {
+public class MomentCommentsAdapter extends ArrayAdapter<EntryDetailsComments> {
 
-    private List<EntryDetailsMoment> datasource;
+    private List<EntryDetailsComments> datasource;
 
     private Context contexto;
 
-    public MomentCommentsAdapter(List<EntryDetailsMoment> ds, Context ctx){
+    public MomentCommentsAdapter(List<EntryDetailsComments> ds, Context ctx){
         super(ctx, R.layout.detail_list_comments_layout, ds);
         this.datasource = ds;
         this.contexto = ctx;
@@ -37,7 +35,7 @@ public class MomentCommentsAdapter extends ArrayAdapter<EntryDetailsMoment> {
     }
 
     @Override
-    public EntryDetailsMoment getItem(int position) {
+    public EntryDetailsComments getItem(int position) {
         return datasource.get(position);
     }
 
@@ -47,7 +45,7 @@ public class MomentCommentsAdapter extends ArrayAdapter<EntryDetailsMoment> {
     @Override
     public View getView(int i, View convertView, ViewGroup parent) {
 
-        EntryDetailsMoment value = getItem(i);
+        EntryDetailsComments value = getItem(i);
         TextView tv_title_comment, tv_my_comment;
         ImageView img_avatar;
 
@@ -63,14 +61,14 @@ public class MomentCommentsAdapter extends ArrayAdapter<EntryDetailsMoment> {
 
 
         try {
-            tv_title_comment.setText(value.getTitle());
+            tv_title_comment.setText(value.getText());
             //tv_my_comment.setText(value.getPlace());
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        if (value.getOriginalname().isEmpty()) img_avatar.setImageResource(R.drawable.avatar_anon);
-        else new Utils.DownloadImageTask((ImageView) convertView.findViewById(R.id.img_avatar_comments)).execute(MysocialEndpoints.MEDIA_URL + value.getOriginalname());
+        //if (value.getPostedByEmail().isEmpty()) img_avatar.setImageResource(R.drawable.avatar_anon);
+        //else new Utils.DownloadImageTask((ImageView) convertView.findViewById(R.id.img_avatar_comments)).execute(MysocialEndpoints.MEDIA_URL + value.getOriginalname());
         return convertView;
     }
 

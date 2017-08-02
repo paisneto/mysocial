@@ -1,6 +1,7 @@
 package com.example.nunocoelho.mysocial.mysocialapi;
 
 import com.example.nunocoelho.mysocial.login.Details;
+import com.example.nunocoelho.mysocial.moment.AnwserListComments;
 import com.example.nunocoelho.mysocial.moment.AnwserMoment;
 import com.example.nunocoelho.mysocial.moment.EntryDetailsMoment;
 import com.example.nunocoelho.mysocial.trip.Anwser;
@@ -118,6 +119,12 @@ public interface MysocialEndpoints {
     @GET("moments/?limit=500&page=1&number=20&sort=-created")
     Call<AnwserMoment> getMomentsTrip(
             @Query("trip") String trip
+    );
+
+    /*Moments Comments*/
+    @GET("moments/trips/{trip}")
+    Call<AnwserListComments> getMomentComments(
+            @Path("trip") String trip
     );
 
     @FormUrlEncoded
