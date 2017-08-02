@@ -23,6 +23,7 @@ import com.example.nunocoelho.mysocial.mysocialapi.MysocialEndpoints;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -156,40 +157,49 @@ public class EditMommentActivity extends AppCompatActivity {
 
     //metodo para carregar os moments de uma viagem
     protected void showMoments(){
-        MysocialEndpoints api = MysocialEndpoints.retrofit.create(MysocialEndpoints.class);
-        Call<AnwserListComments> call = api.getMomentComments(
-                strTripID
-        );
-        call.enqueue(new Callback<AnwserListComments>() {
+        try {
+            MysocialEndpoints api = MysocialEndpoints.retrofit.create(MysocialEndpoints.class);
+            Call<List<AnwserListComments>> call = api.getMomentComments(
+                    strTripID
+            );
+            call.enqueue(new Callback<List<AnwserListComments>>() {
 
-            @Override
-            public void onResponse(Call<AnwserListComments> call, Response<AnwserListComments> response) {
-                if(response.code() == 200) {
-                    AnwserListComments resp = response.body();
-                    try {
-                        for(EntryDetailsComments e : resp.getEntradas()) {
-                            entryDetailsCommentsList.add(e);
+                @Override
+                public void onResponse(Call<List<AnwserListComments>> call, Response<List<AnwserListComments>> response) {
+                    if(response.code() == 200) {
+                        List<AnwserListComments> resp = response.body();
+                        try {
+                            int size = resp.size();
+                            for (int i= 0; i< size; i++){
+                                for(EntryDetailsComments e : resp.get(i).getEntradas()) {
+                                    entryDetailsCommentsList.add(e);
+                                }
+                            }
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                        adapter.notifyDataSetChanged();
+                        adapter.notifyDataSetInvalidated();
+                    } else {
+                        Context context = getApplicationContext();
+                        CharSequence text = "Else DetailTripActivity toast!";
+                        int duration = Toast.LENGTH_LONG;
+
+                        Toast toast = Toast.makeText(context, text, duration);
+                        toast.show();
                     }
-                    adapter.notifyDataSetChanged();
-                    adapter.notifyDataSetInvalidated();
-                } else {
-                    Context context = getApplicationContext();
-                    CharSequence text = "Else DetailTripActivity toast!";
-                    int duration = Toast.LENGTH_LONG;
-
-                    Toast toast = Toast.makeText(context, text, duration);
-                    toast.show();
                 }
-            }
 
-            @Override
-            public void onFailure(Call<AnwserListComments> call, Throwable t) {
-                t.printStackTrace();
-            }
-        });
+                @Override
+                public void onFailure(Call<List<AnwserListComments>> call, Throwable t) {
+                    t.printStackTrace();
+                }
+            });
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

@@ -6,6 +6,8 @@ import com.example.nunocoelho.mysocial.moment.AnwserMoment;
 import com.example.nunocoelho.mysocial.moment.EntryDetailsMoment;
 import com.example.nunocoelho.mysocial.trip.Anwser;
 
+import java.util.List;
+
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -122,9 +124,14 @@ public interface MysocialEndpoints {
     );
 
     /*Moments Comments*/
-    @GET("moments/trips/{trip}")
-    Call<AnwserListComments> getMomentComments(
-            @Path("trip") String trip
+    /*@GET("moments/{id}/comments/")
+    Call<List<AnwserListComments>> getMomentComments(
+            @Path("id") String id
+    );*/
+
+    @GET("moments/?limit=500&page=1&number=20&sort=-created")
+    Call<List<AnwserListComments>> getMomentComments(
+            @Query("trip") String trip
     );
 
     @FormUrlEncoded
